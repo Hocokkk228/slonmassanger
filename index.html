@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <link rel="manifest" href="manifest.json">
-  <meta charset="UTF-8">
-  <title>СЛОН</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>SLON Messenger</title>
@@ -25,6 +22,24 @@
 
 body{background:var(--bg1);color:var(--text1);height:100dvh;overflow:hidden;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;transition:background .3s,color .3s;}
 .app{display:flex;flex-direction:column;height:100dvh;}
+
+/* ── USERNAME SETUP OVERLAY ── */
+.username-overlay{position:fixed;inset:0;background:rgba(0,0,0,.97);backdrop-filter:blur(12px);z-index:1100;display:none;align-items:center;justify-content:center;padding:20px;}
+.username-overlay.show{display:flex;}
+.username-card{background:var(--bg2);border:1px solid var(--border);border-radius:24px;padding:36px 28px;max-width:400px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.9);}
+.username-logo{font-size:56px;margin-bottom:8px;display:block;}
+.username-card h2{font-size:22px;font-weight:900;margin-bottom:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.username-card p{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:20px;}
+.username-inp-wrap{position:relative;margin-bottom:6px;}
+.username-prefix{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:15px;font-weight:700;color:var(--accent);pointer-events:none;font-family:monospace;}
+.username-inp{width:100%;background:var(--input-bg);border:2px solid var(--border);border-radius:12px;padding:12px 12px 12px 28px;color:var(--text1);font-size:15px;outline:none;font-family:monospace;letter-spacing:.5px;transition:border .2s;}
+.username-inp:focus{border-color:var(--accent);}
+.username-inp.err{border-color:var(--red);}
+.username-hint{font-size:11px;color:var(--text2);margin-bottom:18px;text-align:left;}
+.username-btn{width:100%;padding:13px;background:var(--btn-ok-bg);border:none;border-radius:12px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s;letter-spacing:.3px;}
+.username-btn:hover{opacity:.88;}
+.username-error{color:var(--red);font-size:12px;margin-top:10px;min-height:18px;display:none;}
+.username-taken-hint{margin-top:12px;padding:10px;background:rgba(248,81,73,.08);border:1px solid rgba(248,81,73,.3);border-radius:10px;font-size:11px;color:var(--red);line-height:1.5;display:none;}
 
 .topbar{height:52px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 8px;gap:6px;flex-shrink:0;z-index:100;box-shadow:var(--shadow);}
 .tb-logo{font-size:17px;font-weight:900;letter-spacing:2px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;flex-shrink:0;}
@@ -156,6 +171,7 @@ body{background:var(--bg1);color:var(--text1);height:100dvh;overflow:hidden;font
 .mcb-vid{background:var(--btn-primary);color:#fff;}
 .mcb-dev{background:var(--bg3);color:var(--text2);border:1px solid var(--border);}
 
+/* ── CALL SCREEN ── */
 .call-screen{position:fixed;inset:0;background:linear-gradient(160deg,#0a0a1a 0%,#1a0a2e 50%,#0d1a0a 100%);z-index:700;display:none;flex-direction:column;align-items:center;}
 .call-screen.show{display:flex;}
 .call-screen::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 20%,rgba(88,166,255,.08) 0%,transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(124,58,237,.08) 0%,transparent 60%);pointer-events:none;}
@@ -192,6 +208,7 @@ body{background:var(--bg1);color:var(--text1);height:100dvh;overflow:hidden;font
 .cbtn.end svg{width:28px;height:28px;}
 .cbtn.end:hover{box-shadow:0 6px 28px rgba(220,38,38,.7);}
 .cbtn.active-off{background:rgba(220,38,38,.65);}
+.cbtn.screen-active{background:rgba(59,130,246,.7);}
 .cbtn-lbl{font-size:10px;color:rgba(255,255,255,.45);font-weight:600;text-align:center;letter-spacing:.3px;}
 
 .mini-call{position:fixed;bottom:72px;right:12px;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:10px 12px;display:none;align-items:center;gap:10px;z-index:650;box-shadow:0 8px 32px rgba(0,0,0,.7);min-width:210px;animation:slideRight .25s ease;}
@@ -281,6 +298,7 @@ body{background:var(--bg1);color:var(--text1);height:100dvh;overflow:hidden;font
 .dev-ref:hover{border-color:var(--accent);color:var(--accent);}
 @keyframes spin{to{transform:rotate(360deg)}}
 .spin svg{animation:spin .8s linear infinite;}
+.dev-live-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(63,185,80,.15);border:1px solid rgba(63,185,80,.4);border-radius:8px;padding:2px 8px;font-size:10px;color:#3fb950;font-weight:700;margin-left:auto;}
 
 .profile-page{flex:1;overflow-y:auto;display:none;flex-direction:column;background:var(--bg1);}
 .profile-page::-webkit-scrollbar{width:3px;}
@@ -344,7 +362,7 @@ body{background:var(--bg1);color:var(--text1);height:100dvh;overflow:hidden;font
 .btn-danger{padding:10px;background:var(--btn-danger-bg);border:1px solid var(--btn-danger-border);border-radius:10px;color:var(--btn-danger-color);font-size:13px;cursor:pointer;font-weight:600;}
 .m-info{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:9px;}
 .m-idbox{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:9px 11px;margin-bottom:9px;display:flex;align-items:center;gap:7px;}
-.m-id{font-family:monospace;font-size:11px;color:var(--accent);word-break:break-all;flex:1;}
+.m-id{font-family:monospace;font-size:13px;color:var(--accent);word-break:break-all;flex:1;font-weight:700;}
 .btn-copy{padding:5px 9px;background:var(--btn-primary);border:none;border-radius:7px;color:#fff;font-size:11px;cursor:pointer;}
 .cb-row{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:8px;cursor:pointer;transition:background .15s;}
 .cb-row:hover{background:var(--hover);}
@@ -365,7 +383,7 @@ body{background:var(--bg1);color:var(--text1);height:100dvh;overflow:hidden;font
 .peer-prof-av svg{width:36px;height:36px;fill:rgba(255,255,255,.9);}
 .peer-prof-name{font-size:18px;font-weight:800;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.5);display:flex;align-items:center;gap:6px;}
 .peer-prof-status{font-size:12px;color:rgba(255,255,255,.75);}
-.peer-prof-id{font-size:10px;font-family:monospace;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:3px 10px;color:rgba(255,255,255,.8);}
+.peer-prof-id{font-size:11px;font-family:monospace;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:4px 12px;color:rgba(255,255,255,.9);font-weight:700;}
 .peer-prof-bio{font-size:12px;color:rgba(255,255,255,.7);text-align:center;max-width:220px;}
 .peer-prof-actions{display:flex;gap:8px;margin-top:4px;}
 .peer-prof-btn{padding:8px 16px;border-radius:10px;border:none;cursor:pointer;font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px;transition:all .2s;}
@@ -380,7 +398,7 @@ body{background:var(--bg1);color:var(--text1);height:100dvh;overflow:hidden;font
 .peer-prof-info-lbl{font-size:11px;color:var(--text2);}
 .peer-prof-info-val{font-size:13px;font-weight:600;}
 
-.elephant-badge{display:inline-block;font-size:1.1em;cursor:default;position:relative;animation:none;}
+.elephant-badge{display:inline-block;font-size:1.1em;cursor:default;position:relative;}
 .elephant-badge.earned{animation:elephantBounce 0.6s ease infinite alternate;}
 @keyframes elephantBounce{from{transform:scale(1) rotate(-5deg)}to{transform:scale(1.2) rotate(5deg)}}
 
@@ -458,6 +476,8 @@ body{background:var(--bg1);color:var(--text1);height:100dvh;overflow:hidden;font
   <symbol id="i-phone-off" viewBox="0 0 24 24"><path d="M23.76 14.37l-3-3a.97.97 0 0 0-.97-.25l-3.56.89a.98.98 0 0 0-.71.71L14.97 14c-1.03-.42-2.27-1.04-3.33-2.1-1.06-1.06-1.68-2.3-2.1-3.33l1.27-.55c.32-.14.55-.44.6-.79l.89-3.56a.98.98 0 0 0-.24-.97l-3-3A.97.97 0 0 0 8 0C3.62 0 0 3.62 0 8c0 8.84 7.16 16 16 16 4.38 0 8-3.62 8-8 0-.38-.22-.72-.24-.63z"/></symbol>
   <symbol id="i-video" viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></symbol>
   <symbol id="i-video-off" viewBox="0 0 24 24"><path d="M21 6.5l-4-4-2 2-2-2-5 5 2 2-4.5 4.5c-.3.3-.5.7-.5 1.1V18c0 .55.45 1 1 1h9.4l3 3 1.41-1.41L21 18.41V6.5zM4 13.41L9.41 8H10l2.59 2.59L4 13.41zm0 1.59l5 5H4v-5zm17-5.5V18c0 .55-.45 1-1 1h-1.17l-9-9H16l5 5.5z"/></symbol>
+  <symbol id="i-screen-share" viewBox="0 0 24 24"><path d="M20 3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h3l-1 1v2h12v-2l-1-1h3c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 13H4V5h16v11zm-9-1l5-4-5-4v8z"/></symbol>
+  <symbol id="i-screen-share-off" viewBox="0 0 24 24"><path d="M2.81 2.81L1.39 4.22 2 4.83V16c0 1.1.9 2 2 2h3l-1 1v2h12v-2l-1-1h1.17l1.61 1.61 1.41-1.41L2.81 2.81zM4 16V6.83l9.11 9.11L4 16zm16-2.83l-2-2V5H8.83l-2-2H20c1.1 0 2 .9 2 2v11c0 .28-.06.54-.15.78L20 15.17V13.17z"/></symbol>
   <symbol id="i-settings" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.57 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></symbol>
   <symbol id="i-minimize" viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z"/></symbol>
   <symbol id="i-maximize" viewBox="0 0 24 24"><path d="M12 5l-7 7h4v7h6v-7h4z"/></symbol>
@@ -487,7 +507,27 @@ body{background:var(--bg1);color:var(--text1);height:100dvh;overflow:hidden;font
   <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></symbol>
   <symbol id="i-touch" viewBox="0 0 24 24"><path d="M9 11.24V7.5C9 6.12 10.12 5 11.5 5S14 6.12 14 7.5v3.74c1.21-.81 2-2.18 2-3.74C16 5.01 13.99 3 11.5 3S7 5.01 7 7.5c0 1.56.79 2.93 2 3.74zm9.84 4.63l-4.54-2.26c-.17-.07-.35-.11-.54-.11H13v-6c0-.83-.67-1.5-1.5-1.5S10 6.67 10 7.5v10.74l-3.43-.72c-.08-.01-.15-.03-.24-.03-.31 0-.59.13-.79.33l-.79.8 4.94 4.94c.27.27.65.44 1.06.44h6.79c.75 0 1.33-.55 1.44-1.28l.75-5.27c.01-.07.02-.14.02-.2 0-.62-.38-1.16-.91-1.42z"/></symbol>
   <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></symbol>
+  <symbol id="i-username" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></symbol>
 </svg>
+
+<!-- ── USERNAME SETUP OVERLAY ── -->
+<div class="username-overlay" id="usernameOverlay">
+  <div class="username-card">
+    <span class="username-logo">🐘</span>
+    <h2>Добро пожаловать в SLON!</h2>
+    <p>Выбери юзернейм — это твой постоянный адрес. Друзья будут добавлять тебя именно по нему.</p>
+    <div class="username-inp-wrap">
+      <span class="username-prefix">@</span>
+      <input class="username-inp" id="usernameInp" placeholder="твой_юзернейм" maxlength="20" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" onkeydown="if(event.key==='Enter')saveUsername()" oninput="sanitizeUsernameInput(this)">
+    </div>
+    <div class="username-hint">Только латинские буквы, цифры и _ • От 3 до 20 символов • Изменить нельзя</div>
+    <button class="username-btn" onclick="saveUsername()">Войти в SLON 🐘</button>
+    <div class="username-error" id="usernameError"></div>
+    <div class="username-taken-hint" id="usernameTakenHint">
+      Этот юзернейм уже занят — выбери другой. Если ты уже пользовался этим ником, возможно прошло <b>72 часа</b> неактивности и он освободился.
+    </div>
+  </div>
+</div>
 
 <audio id="remAudio" autoplay playsinline style="display:none"></audio>
 <input type="file" id="fileIn" accept="image/*,.pdf,.zip,.rar,.mp3,.mp4,.docx,.xlsx" style="display:none" onchange="handleFile(this)">
@@ -578,6 +618,7 @@ body{background:var(--bg1);color:var(--text1);height:100dvh;overflow:hidden;font
     </div>
   </div>
 
+  <!-- ── CALL SCREEN (аудио + видео) ── -->
   <div class="call-screen" id="callScreen">
     <div class="cs-topbar">
       <div class="cs-type-pill" id="csTypePill">
@@ -601,23 +642,33 @@ body{background:var(--bg1);color:var(--text1);height:100dvh;overflow:hidden;font
         <svg><use href="#i-touch"/></svg> Нажми для включения звука
       </button>
     </div>
+    <!-- Кнопки звонка — одинаковый стиль для аудио и видео -->
     <div class="cs-controls">
       <div class="cs-btn-row">
+        <!-- Микрофон -->
         <div class="cbtn-wrap">
           <button class="cbtn" id="muteBtn" onclick="toggleMute()"><svg><use href="#i-mic"/></svg></button>
           <div class="cbtn-lbl" id="muteLbl">Микро</div>
         </div>
-        <div class="cbtn-wrap" id="camCtrlWrap" style="display:none">
+        <!-- Камера (всегда видна: в аудио — добавляет видео, в видео — toggleCam) -->
+        <div class="cbtn-wrap">
           <button class="cbtn" id="camBtn" onclick="toggleCam()"><svg><use href="#i-video"/></svg></button>
-          <div class="cbtn-lbl">Камера</div>
+          <div class="cbtn-lbl" id="camLbl">Камера</div>
         </div>
+        <!-- Демонстрация экрана (всегда видна) -->
+        <div class="cbtn-wrap">
+          <button class="cbtn" id="screenShareBtn" onclick="toggleScreenShare()"><svg><use href="#i-screen-share"/></svg></button>
+          <div class="cbtn-lbl" id="screenShareLbl">Экран</div>
+        </div>
+        <!-- Сброс -->
         <div class="cbtn-wrap">
           <button class="cbtn end" onclick="endCall()"><svg><use href="#i-phone-off"/></svg></button>
           <div class="cbtn-lbl" style="color:#f87171">Сброс</div>
         </div>
+        <!-- Настройки -->
         <div class="cbtn-wrap">
           <button class="cbtn" onclick="showDevPanel()"><svg><use href="#i-settings"/></svg></button>
-          <div class="cbtn-lbl">Настройки</div>
+          <div class="cbtn-lbl">Устройства</div>
         </div>
       </div>
     </div>
@@ -695,7 +746,7 @@ body{background:var(--bg1);color:var(--text1);height:100dvh;overflow:hidden;font
           <div class="msg-av">🐘</div>
           <div class="msg-body">
             <div class="msg-who">🐘 СЛОН</div>
-            <div class="msg-bub">Привет! Нажми кнопку профиля (правый верхний угол) чтобы настроить себя. Для звонков сначала добавь контакт через ➕</div>
+            <div class="msg-bub">Привет! Выбери юзернейм и делись им с друзьями — они найдут тебя по нему через ➕ Контакт</div>
             <div class="msg-time">сейчас</div>
           </div>
         </div>
@@ -741,7 +792,7 @@ body{background:var(--bg1);color:var(--text1);height:100dvh;overflow:hidden;font
           </div>
           <div class="prof-name-disp" id="profNameEl">Без имени</div>
           <div class="prof-bio-disp" id="profBioEl" style="display:none"></div>
-          <div class="prof-id-pill" id="profIdPill" onclick="copyMyId()">Загрузка ID…</div>
+          <div class="prof-id-pill" id="profIdPill" onclick="copyMyId()">@username</div>
         </div>
         <div class="prof-body">
           <div class="prof-section">
@@ -778,10 +829,10 @@ body{background:var(--bg1);color:var(--text1);height:100dvh;overflow:hidden;font
             <div style="padding:10px 14px 14px"><div class="tp-grid" id="profThemeGrid"></div></div>
           </div>
           <div class="prof-section">
-            <div class="prof-sec-title">Мой SLON ID</div>
+            <div class="prof-sec-title">Мой юзернейм</div>
             <div class="prof-row" onclick="showMyId()">
-              <div class="prof-row-ico"><svg><use href="#i-key"/></svg></div>
-              <div class="prof-row-info"><div class="prof-row-label">Скопировать ID</div><div class="prof-row-val" id="profIdVal" style="font-family:monospace">—</div></div>
+              <div class="prof-row-ico"><svg><use href="#i-username"/></svg></div>
+              <div class="prof-row-info"><div class="prof-row-label">Скопировать юзернейм</div><div class="prof-row-val" id="profIdVal" style="font-family:monospace;font-size:13px">—</div></div>
               <div class="prof-row-arr"><svg><use href="#i-copy"/></svg></div>
             </div>
           </div>
@@ -933,6 +984,7 @@ function toast(msg,dur=3000){document.querySelector('.toast')?.remove();const t=
 
 // ── STATE ──
 let peer=null,myId=null;
+let myUsername=''; // ← стабильный PeerJS ID
 let myNick='',myBio='',myAvatar=null,myProfileBg='bg0';
 let hasElephantBadge=false;
 let conns={},activeChat='ai',currentView='chat';
@@ -940,6 +992,7 @@ let chatHist={ai:[]},grpHist={},groups={},peerNames={},peerAvatars={};
 let inFiles={},fileStore={};
 let activeCall=null,localStream=null,callTimer=null,callSecs=0;
 let pendingCall=null,isMuted=false,isCamOff=false;
+let isScreenSharing=false,screenShareStream=null;
 let selMic='',selSpk='',selCam='';
 let typingTimers={};
 let callMinimized=false;
@@ -957,6 +1010,45 @@ const BG_COLORS=[
   {id:'bg8',grad:'linear-gradient(135deg,#4338ca,#6d28d9)'},
 ];
 
+// ── USERNAME SETUP ──
+function sanitizeUsernameInput(inp){
+  const pos=inp.selectionStart;
+  const v=inp.value.toLowerCase().replace(/[^a-z0-9_]/g,'');
+  inp.value=v;
+  try{inp.setSelectionRange(pos,pos);}catch(e){}
+}
+
+function showUsernameOverlay(){
+  $('usernameOverlay').classList.add('show');
+  setTimeout(()=>$('usernameInp')?.focus(),150);
+}
+
+function saveUsername(){
+  const raw=$('usernameInp').value.trim().toLowerCase().replace(/[^a-z0-9_]/g,'');
+  const errEl=$('usernameError');
+  const takenEl=$('usernameTakenHint');
+  errEl.style.display='none'; takenEl.style.display='none';
+  $('usernameInp').classList.remove('err');
+
+  if(raw.length<3){
+    errEl.textContent='Минимум 3 символа';
+    errEl.style.display='block';
+    $('usernameInp').classList.add('err');
+    return;
+  }
+  if(raw.length>20){
+    errEl.textContent='Максимум 20 символов';
+    errEl.style.display='block';
+    $('usernameInp').classList.add('err');
+    return;
+  }
+
+  myUsername=raw;
+  LS.set('sl_username',raw);
+  $('usernameOverlay').classList.remove('show');
+  initPeer();
+}
+
 // ── SAVE / LOAD ──
 function saveAll(){
   const prep=hist=>(hist||[]).slice(-120).map(m=>{
@@ -973,6 +1065,7 @@ function saveAll(){
   LS.set('sl_mic',selMic);LS.set('sl_spk',selSpk);LS.set('sl_cam',selCam);
   LS.set('sl_elephant',hasElephantBadge);
 }
+
 function loadStorage(){
   chatHist=LS.get('sl_chats',{ai:[]});
   grpHist=LS.get('sl_grpH',{});
@@ -984,11 +1077,13 @@ function loadStorage(){
   myProfileBg=LS.get('sl_pbg','bg0');
   selMic=LS.get('sl_mic','');selSpk=LS.get('sl_spk','');selCam=LS.get('sl_cam','');
   hasElephantBadge=LS.get('sl_elephant',false);
+  myUsername=LS.get('sl_username','');
   if(!chatHist.ai)chatHist.ai=[];
   for(const h of Object.values(chatHist))for(const m of(h||[]))if(m.photoSaved){m.photoId=storePhoto(m.photoSaved);delete m.photoSaved;}
   for(const h of Object.values(grpHist))for(const m of(h||[]))if(m.photoSaved){m.photoId=storePhoto(m.photoSaved);delete m.photoSaved;}
   applyTheme(LS.get('sl_theme','dark'),false);
 }
+
 function rebuildSidebar(){
   Object.keys(peerNames).forEach(pid=>{if(!$('si-'+pid))addSbItem(pid);});
   Object.keys(groups).forEach(gid=>{if(!$('si-'+gid))addSbGroup(gid);});
@@ -1004,13 +1099,16 @@ function rebuildSidebar(){
 }
 
 // ════════════════════════════════════════
-// ── PEER (ИСПРАВЛЕННЫЙ P2P) ──
+// ── PEER (P2P с юзернеймом как ID) ──
 // ════════════════════════════════════════
 
 function initPeer(){
   if(!window.Peer){setNet(false,'PeerJS не загружен');return;}
+  if(!myUsername){showUsernameOverlay();return;}
+
   try{
-    peer=new Peer({
+    // Используем юзернейм как PeerJS ID — стабильные чаты!
+    peer=new Peer(myUsername,{
       debug:0,
       config:{iceServers:[
         {urls:'stun:stun.l.google.com:19302'},
@@ -1021,11 +1119,10 @@ function initPeer(){
     });
 
     peer.on('open',id=>{
-      myId=id;
+      myId=id; // id === myUsername
       setMyLabel();
-      setNet(true,id.slice(0,14)+'…');
+      setNet(true,'@'+myUsername);
       updateProfileDisplay();
-      // Переподключаемся ко всем известным пирам
       setTimeout(()=>{
         Object.keys(peerNames).forEach(pid=>{
           if(!conns[pid]?.open)silentConnect(pid);
@@ -1033,7 +1130,6 @@ function initPeer(){
       },1200);
     });
 
-    // Входящее соединение — silent=true, не засоряем чат системными сообщениями
     peer.on('connection',conn=>{
       setupConn(conn,true);
     });
@@ -1044,7 +1140,7 @@ function initPeer(){
       el.innerHTML='';
       if(av){const i=document.createElement('img');i.src=av;i.style.cssText='width:100%;height:100%;object-fit:cover;border-radius:50%';el.appendChild(i);}
       else el.innerHTML=icoSvg('i-person');
-      $('icName').textContent=peerNames[call.peer]||call.peer.slice(0,12);
+      $('icName').textContent=peerNames[call.peer]||('@'+call.peer);
       $('icType').textContent=pendingCall.isVideo?'Видеозвонок':'Голосовой звонок';
       $('incoming').classList.add('show');
       if(navigator.vibrate)navigator.vibrate([300,100,300,100,300]);
@@ -1058,14 +1154,25 @@ function initPeer(){
     });
 
     peer.on('error',e=>{
-      // peer-unavailable: пользователь недоступен — показываем сообщение в нужном чате
+      // Юзернейм занят — просим выбрать другой
+      if(e.type==='unavailable-id'){
+        LS.del('sl_username');
+        myUsername='';
+        if(peer&&!peer.destroyed){try{peer.destroy();}catch(err){}}
+        peer=null;
+        const errEl=$('usernameError');
+        const takenEl=$('usernameTakenHint');
+        showUsernameOverlay();
+        if(errEl){errEl.textContent='Юзернейм @'+LS.get('sl_username','?')+' уже занят!';errEl.style.display='block';}
+        if(takenEl)takenEl.style.display='block';
+        return;
+      }
       if(e.type==='peer-unavailable'){
         const m=String(e.message||'').match(/Could not connect to peer ([^\s]+)/i);
         const pid=m?m[1]:null;
         if(pid){
-          if(chatHist[pid]!==undefined)sysMsg(pid,'⚠ Пользователь недоступен или офлайн');
+          if(chatHist[pid]!==undefined)sysMsg(pid,'⚠ Пользователь @'+pid+' недоступен или офлайн');
           else toast('Пользователь недоступен',3000);
-          // Чистим мёртвое соединение
           delete conns[pid];
           setSbStatus(pid,false);
           if(activeChat===pid){updateChatHeader();updateReconBanner();}
@@ -1084,8 +1191,8 @@ function initPeer(){
 }
 
 function silentConnect(pid){
-  if(!peer?.open||pid===myId)return;
-  if(conns[pid]?.open)return;   // уже подключён
+  if(!peer?.open||pid===myUsername)return;
+  if(conns[pid]?.open)return;
   try{
     const c=peer.connect(pid,{reliable:true,serialization:'json'});
     setupConn(c,true);
@@ -1094,39 +1201,28 @@ function silentConnect(pid){
 
 function setupConn(conn,silent=false){
   const pid=conn.peer;
-
-  // Если уже есть другое соединение с этим пиром — закрываем старое
   if(conns[pid]&&conns[pid]!==conn){
     try{conns[pid].close();}catch(e){}
   }
   conns[pid]=conn;
-
   if(!chatHist[pid])chatHist[pid]=[];
-  if(!peerNames[pid])peerNames[pid]='Peer_'+pid.slice(0,6);
+  // Дефолтное имя — юзернейм (@ + id)
+  if(!peerNames[pid])peerNames[pid]='@'+pid;
   if(!$('si-'+pid))addSbItem(pid);
 
-  // Обработчик открытия — вынесен в отдельную функцию для повторного использования
   const onOpen=()=>{
-    // Проверяем, что это соединение всё ещё актуально (не вытеснено новым)
     if(conns[pid]!==conn)return;
     setSbStatus(pid,true);
-    // Отправляем свои данные собеседнику
-    sendData(conn,{type:'hello',nick:myNick||'',avatar:myAvatar||null,bio:myBio||''});
+    sendData(conn,{type:'hello',nick:myNick||'',avatar:myAvatar||null,bio:myBio||'',username:myUsername});
     if(!silent)sysMsg(pid,'Соединение установлено');
     if(activeChat===pid){updateChatHeader();updateReconBanner();}
     saveAll();
   };
 
-  // КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: соединение могло открыться до навешивания обработчика
-  if(conn.open){
-    // Уже открыто — вызываем немедленно
-    onOpen();
-  }else{
-    conn.on('open',onOpen);
-  }
+  if(conn.open){onOpen();}
+  else{conn.on('open',onOpen);}
 
   conn.on('data',raw=>{
-    // Игнорируем данные от устаревшего соединения
     if(conns[pid]!==conn)return;
     let d;
     try{d=typeof raw==='string'?JSON.parse(raw):raw;}catch(e){d=raw;}
@@ -1134,7 +1230,6 @@ function setupConn(conn,silent=false){
   });
 
   conn.on('close',()=>{
-    // Игнорируем закрытие устаревшего соединения
     if(conns[pid]!==conn)return;
     delete conns[pid];
     setSbStatus(pid,false);
@@ -1150,20 +1245,21 @@ function setupConn(conn,silent=false){
 
 function connectTo(pid,nick){
   if(!peer?.open)return toast('P2P не готов');
-  pid=pid.trim();if(!pid)return toast('Введи ID');
-  if(pid===myId)return toast('Это твой ID!');
-  if(!peerNames[pid])peerNames[pid]=nick||('Peer_'+pid.slice(0,6));
+  pid=pid.trim().toLowerCase().replace(/[^a-z0-9_]/g,'');
+  if(!pid)return toast('Введи юзернейм');
+  if(pid===myUsername)return toast('Это твой юзернейм!');
+  // Дефолтное имя — юзернейм
+  if(!peerNames[pid])peerNames[pid]=nick||('@'+pid);
   else if(nick)peerNames[pid]=nick;
   if(!chatHist[pid])chatHist[pid]=[];
   if(!$('si-'+pid))addSbItem(pid);
   saveAll();
-  // Если уже подключён — просто открываем чат
   if(conns[pid]?.open){openChat(pid);return;}
   try{
     const c=peer.connect(pid,{reliable:true,serialization:'json'});
-    setupConn(c,false);  // false = показывать системные сообщения
+    setupConn(c,false);
     openChat(pid);
-    sysMsg(pid,'Подключение…');
+    sysMsg(pid,'Подключение к @'+pid+'…');
   }catch(e){toast('Ошибка подключения: '+e.message);}
 }
 
@@ -1175,8 +1271,10 @@ function sendData(conn,data){
 function onData(pid,data){
   switch(data.type){
     case 'hello':
-      if(data.nick!=null){peerNames[pid]=data.nick;updateSbName(pid);}
+      if(data.nick!=null&&data.nick!==''){peerNames[pid]=data.nick;}
+      else if(data.username){peerNames[pid]='@'+data.username;}
       if(data.avatar!==undefined){peerAvatars[pid]=data.avatar;updateSbAvatar(pid);}
+      updateSbName(pid);
       if(activeChat===pid)updateChatHeader();
       saveAll();
       break;
@@ -1227,19 +1325,19 @@ function sendMsg(){
     },delay);
   }else{
     const c=conns[activeChat];
-    if(c?.open)sendData(c,{type:'msg',text:txt,nick:myNick||('Peer_'+myId?.slice(0,6)),avatar:myAvatar||null});
+    if(c?.open)sendData(c,{type:'msg',text:txt,nick:myNick||('@'+myUsername),avatar:myAvatar||null});
     else sysMsg(activeChat,'⚠ Нет соединения. Попробуй переподключиться.');
   }
 }
 
 function recvMsg(pid,text,nick,avatar){
   if(!chatHist[pid])chatHist[pid]=[];
-  if(nick)peerNames[pid]=nick;
+  if(nick&&nick!=='')peerNames[pid]=nick;
   if(avatar!==undefined){peerAvatars[pid]=avatar;updateSbAvatar(pid);}
-  const msg={id:'m'+Date.now(),sender:'inc',name:peerNames[pid]||'?',avatar:avatar||peerAvatars[pid]||null,text,time:nowTime()};
+  const msg={id:'m'+Date.now(),sender:'inc',name:peerNames[pid]||('@'+pid),avatar:avatar||peerAvatars[pid]||null,text,time:nowTime()};
   chatHist[pid].push(msg);
   if(activeChat===pid){appendMsg(msg);scrollDown();}
-  else{addUnread(pid);toast((peerNames[pid]||'P2P')+': '+text.slice(0,50));}
+  else{addUnread(pid);toast((peerNames[pid]||('@'+pid))+': '+text.slice(0,50));}
   saveAll();
 }
 
@@ -1348,7 +1446,7 @@ function sendFileTo(fid,name,mime,isImg,data){
     sendData(conn,{type:'file_end',id:fid});
   };
   if(activeChat.startsWith('g_')){
-    groups[activeChat]?.members?.forEach(pid=>{if(pid!==myId&&conns[pid]?.open)doSend(conns[pid]);});
+    groups[activeChat]?.members?.forEach(pid=>{if(pid!==myUsername&&conns[pid]?.open)doSend(conns[pid]);});
   }else if(activeChat!=='ai'&&conns[activeChat]?.open){
     doSend(conns[activeChat]);
   }
@@ -1363,7 +1461,7 @@ async function finishFile(fid,pid){
   let msg;
   if(isImg){
     const photoId=storePhoto(fullData),thumb=await makeThumb(fullData);
-    msg={id:fid,sender:'inc',name:peerNames[pid]||'?',avatar:peerAvatars[pid]||null,time:nowTime(),photoId,photoThumb:thumb||fullData,fileName:f.name};
+    msg={id:fid,sender:'inc',name:peerNames[pid]||('@'+pid),avatar:peerAvatars[pid]||null,time:nowTime(),photoId,photoThumb:thumb||fullData,fileName:f.name};
   }else{
     const fdid='fd_'+fid;
     try{
@@ -1372,12 +1470,12 @@ async function finishFile(fid,pid){
       for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
       fileStore[fdid]=URL.createObjectURL(new Blob([arr],{type:f.mime||'application/octet-stream'}));
     }catch(e){fileStore[fdid]=null;}
-    msg={id:fid,sender:'inc',name:peerNames[pid]||'?',avatar:peerAvatars[pid]||null,time:nowTime(),fileInfo:{name:f.name,size:''},fileDataId:fdid};
+    msg={id:fid,sender:'inc',name:peerNames[pid]||('@'+pid),avatar:peerAvatars[pid]||null,time:nowTime(),fileInfo:{name:f.name,size:''},fileDataId:fdid};
   }
   if(!chatHist[pid])chatHist[pid]=[];
   chatHist[pid].push(msg);
   if(activeChat===pid){appendMsg(msg);scrollDown();}
-  else{addUnread(pid);toast((isImg?'📷 ':'📎 ')+(peerNames[pid]||'P2P')+': '+f.name.slice(0,30));}
+  else{addUnread(pid);toast((isImg?'📷 ':'📎 ')+(peerNames[pid]||('@'+pid))+': '+f.name.slice(0,30));}
   saveAll();
 }
 
@@ -1458,7 +1556,10 @@ async function getMediaStream(isVideo){
   });
 }
 
-// ── CALLS ──
+// ═══════════════════════════════════════════════════
+// ── CALLS (аудио + видео + экран + камера в аудио) ──
+// ═══════════════════════════════════════════════════
+
 function startCallWithPerm(peerId,isVideo){
   if(!peer?.open)return toast('P2P не готов');
   if(!conns[peerId]?.open)return toast('Собеседник не в сети');
@@ -1491,6 +1592,7 @@ async function answerCall(){
   }).catch(()=>{toast('Не удалось получить доступ к микрофону');call.close();});
 }
 function rejectCall(){$('incoming').classList.remove('show');if(pendingCall?.call)pendingCall.call.close();pendingCall=null;}
+
 function setupCallUI(peerId,isVideo){
   const av=peerAvatars[peerId];
   const callAvEl=$('callAv');callAvEl.innerHTML='';
@@ -1499,27 +1601,42 @@ function setupCallUI(peerId,isVideo){
   const mcAvEl=$('mcAv');mcAvEl.innerHTML='';
   if(av){const i=document.createElement('img');i.src=av;i.style.cssText='width:100%;height:100%;object-fit:cover;border-radius:50%';mcAvEl.appendChild(i);}
   else mcAvEl.innerHTML=icoSvg('i-person');
-  const name=peerNames[peerId]||peerId.slice(0,12);
+  const name=peerNames[peerId]||('@'+peerId);
   $('callPName').textContent=$('mcName').textContent=name;
   $('callTimer').textContent=$('mcTimer').textContent='00:00';
   $('callSub').textContent='Соединение…';$('tapHint').style.display='none';
   $('csTypeText').textContent=isVideo?'Видеозвонок':'Аудиозвонок';
   $('csTypeIco').innerHTML=`<use href="${isVideo?'#i-video':'#i-phone'}"/>`;
+
+  // Видео-обёртка: только для видеозвонков изначально
   $('callVidWrap').classList.toggle('show',isVideo);
   $('callAudUI').style.display=isVideo?'none':'';
-  $('camCtrlWrap').style.display=isVideo?'':'none';
-  if(isVideo&&localStream){const lv=$('localVideo');lv.srcObject=localStream;lv.play().catch(()=>{});}
-  callMinimized=false;$('callScreen').classList.add('show');$('miniCall').classList.remove('show');
+
+  // Локальное видео для видеозвонка
+  if(isVideo&&localStream){
+    const lv=$('localVideo');lv.srcObject=localStream;lv.play().catch(()=>{});
+  }
+
+  // Сбрасываем состояние кнопок
+  isMuted=false;isCamOff=false;
+  updateMuteBtn();updateCamBtn();updateScreenShareBtn();
+
+  callMinimized=false;
+  $('callScreen').classList.add('show');
+  $('miniCall').classList.remove('show');
 }
+
 function onRemoteStream(rs,isVideo){
   $('callSub').textContent='';
   if(isVideo){const rv=$('remoteVideo');rv.srcObject=rs;rv.play().catch(()=>{});}
   const a=$('remAudio');a.srcObject=rs;a.volume=1.0;
-  if(selSpk&&selSpk!=='default'&&typeof a.setSinkId==='function')a.setSinkId(selSpk).catch(()=>{});
+  if(selSpk&&selSpk!=='default'&&typeof a.setSinkId==='function')
+    a.setSinkId(selSpk).catch(()=>{});
   const pp=a.play();
   if(pp){pp.then(()=>$('tapHint').style.display='none').catch(()=>{$('tapHint').style.display='flex';$('callSub').textContent='Нажми для звука';});}
   startCallTimer();
 }
+
 function tapPlay(){
   const a=$('remAudio');
   a.play().then(()=>{$('tapHint').style.display='none';$('callSub').textContent='';toast('Звук включён');}).catch(()=>toast('Не удалось включить звук'));
@@ -1534,12 +1651,20 @@ function startCallTimer(){
 }
 function minimizeCall(){callMinimized=true;$('callScreen').classList.remove('show');$('miniCall').classList.add('show');}
 function maximizeCall(){callMinimized=false;$('miniCall').classList.remove('show');$('callScreen').classList.add('show');}
+
 function endCall(){
   if(activeCall?.peerId&&conns[activeCall.peerId]?.open)
     try{sendData(conns[activeCall.peerId],{type:'call_end'});}catch(e){}
   endCallCleanup();
 }
 function endCallCleanup(){
+  // Останавливаем демонстрацию экрана
+  if(screenShareStream){
+    screenShareStream.getTracks().forEach(t=>t.stop());
+    screenShareStream=null;
+  }
+  isScreenSharing=false;
+
   try{activeCall?.call?.close();}catch(e){}
   if(localStream){localStream.getTracks().forEach(t=>t.stop());localStream=null;}
   if(callTimer){clearInterval(callTimer);callTimer=null;}
@@ -1547,31 +1672,164 @@ function endCallCleanup(){
   $('remoteVideo').srcObject=null;$('localVideo').srcObject=null;
   $('callScreen').classList.remove('show');$('miniCall').classList.remove('show');
   activeCall=null;isMuted=false;isCamOff=false;callMinimized=false;
-  $('muteBtn').className='cbtn';$('muteBtn').innerHTML=icoSvg('i-mic');$('muteLbl').textContent='Микро';
-  $('mcMuteBtn').className='mc-btn mc-btn-mute';$('mcMuteBtn').innerHTML=icoSvg('i-mic');
+  updateMuteBtn();updateCamBtn();updateScreenShareBtn();
   toast('Звонок завершён');
 }
+
+// ── Кнопка МИКРОФОН ──
 function toggleMute(){
-  if(!localStream)return;isMuted=!isMuted;
+  if(!localStream)return;
+  isMuted=!isMuted;
   localStream.getAudioTracks().forEach(t=>t.enabled=!isMuted);
-  $('muteBtn').innerHTML=icoSvg(isMuted?'i-mic-off':'i-mic');
-  $('muteBtn').className='cbtn'+(isMuted?' active-off':'');
-  $('muteLbl').textContent=isMuted?'Включить':'Микро';
-  $('mcMuteBtn').innerHTML=icoSvg(isMuted?'i-mic-off':'i-mic');
-  $('mcMuteBtn').className='mc-btn mc-btn-mute'+(isMuted?' off':'');
+  updateMuteBtn();
 }
-function toggleCam(){
-  if(!localStream)return;isCamOff=!isCamOff;
-  localStream.getVideoTracks().forEach(t=>t.enabled=!isCamOff);
-  $('camBtn').innerHTML=icoSvg(isCamOff?'i-video-off':'i-video');
-  $('camBtn').className='cbtn'+(isCamOff?' active-off':'');
+function updateMuteBtn(){
+  const btn=$('muteBtn'),lbl=$('muteLbl'),mc=$('mcMuteBtn');
+  if(btn){btn.innerHTML=icoSvg(isMuted?'i-mic-off':'i-mic');btn.className='cbtn'+(isMuted?' active-off':'');}
+  if(lbl)lbl.textContent=isMuted?'Включить':'Микро';
+  if(mc){mc.innerHTML=icoSvg(isMuted?'i-mic-off':'i-mic');mc.className='mc-btn mc-btn-mute'+(isMuted?' off':'');}
+}
+
+// ── Кнопка КАМЕРА ──
+// В видеозвонке: включает/выключает трек.
+// В аудиозвонке: добавляет камеру → показывает видео-обёртку.
+async function toggleCam(){
+  if(!activeCall)return;
+  const videoTracks=localStream?localStream.getVideoTracks():[];
+
+  if(videoTracks.length===0){
+    // Нет видеотрека — добавляем камеру (работает для аудиозвонка)
+    try{
+      const vc=selCam&&selCam!=='default'?{deviceId:{ideal:selCam},facingMode:{ideal:'user'}}:{facingMode:'user'};
+      const camStream=await navigator.mediaDevices.getUserMedia({video:vc});
+      const videoTrack=camStream.getVideoTracks()[0];
+      if(!videoTrack)return;
+      localStream.addTrack(videoTrack);
+      const pc=activeCall.call.peerConnection;
+      if(pc){
+        const sender=pc.getSenders().find(s=>s.track?.kind==='video');
+        if(sender)sender.replaceTrack(videoTrack);
+        else pc.addTrack(videoTrack,localStream);
+      }
+      $('localVideo').srcObject=localStream;
+      $('callVidWrap').classList.add('show');
+      $('callAudUI').style.display='none';
+      isCamOff=false;
+      updateCamBtn();
+      toast('Камера включена');
+    }catch(e){
+      toast('Не удалось включить камеру: '+(e.message||e.name));
+    }
+    return;
+  }
+
+  // Есть видеотрек — переключаем
+  isCamOff=!isCamOff;
+  videoTracks.forEach(t=>t.enabled=!isCamOff);
+  updateCamBtn();
+}
+function updateCamBtn(){
+  const btn=$('camBtn'),lbl=$('camLbl');
+  if(btn){btn.innerHTML=icoSvg(isCamOff?'i-video-off':'i-video');btn.className='cbtn'+(isCamOff?' active-off':'');}
+  if(lbl)lbl.textContent=isCamOff?'Вкл камеру':'Камера';
+}
+
+// ── Кнопка ДЕМОНСТРАЦИЯ ЭКРАНА ──
+async function toggleScreenShare(){
+  if(!activeCall){toast('Нет активного звонка');return;}
+  if(isScreenSharing){stopScreenShare();return;}
+
+  if(!navigator.mediaDevices?.getDisplayMedia){
+    toast('Демонстрация экрана не поддерживается этим браузером');return;
+  }
+
+  try{
+    screenShareStream=await navigator.mediaDevices.getDisplayMedia({
+      video:{cursor:'always',displaySurface:'monitor'},
+      audio:false
+    });
+    const screenTrack=screenShareStream.getVideoTracks()[0];
+    if(!screenTrack){screenShareStream=null;return;}
+
+    const pc=activeCall.call.peerConnection;
+    if(!pc){toast('Нет P2P соединения');screenShareStream.getTracks().forEach(t=>t.stop());screenShareStream=null;return;}
+
+    const senders=pc.getSenders();
+    const videoSender=senders.find(s=>s.track?.kind==='video');
+
+    if(videoSender){
+      // Заменяем существующий видеотрек на экран
+      await videoSender.replaceTrack(screenTrack);
+    }else{
+      // Аудиозвонок — добавляем новый трек экрана
+      pc.addTrack(screenTrack,localStream);
+    }
+
+    // Локальный превью
+    $('localVideo').srcObject=new MediaStream([screenTrack]);
+    $('callVidWrap').classList.add('show');
+    $('callAudUI').style.display='none';
+
+    isScreenSharing=true;
+    updateScreenShareBtn();
+    toast('Демонстрация экрана начата 🖥');
+
+    // Когда пользователь сам останавливает через браузер
+    screenTrack.onended=()=>stopScreenShare();
+
+  }catch(e){
+    screenShareStream=null;
+    if(e.name!=='NotAllowedError')toast('Ошибка демонстрации: '+(e.message||e.name));
+  }
+}
+
+async function stopScreenShare(){
+  if(screenShareStream){
+    screenShareStream.getTracks().forEach(t=>t.stop());
+    screenShareStream=null;
+  }
+  isScreenSharing=false;
+  updateScreenShareBtn();
+
+  if(!activeCall)return;
+  const pc=activeCall.call.peerConnection;
+
+  if(activeCall.isVideo){
+    // Возвращаем оригинальный видеотрек камеры
+    const videoTrack=localStream?.getVideoTracks()[0];
+    if(videoTrack&&pc){
+      const sender=pc.getSenders().find(s=>s.track?.kind==='video');
+      if(sender)await sender.replaceTrack(videoTrack).catch(()=>{});
+    }
+    $('localVideo').srcObject=localStream||null;
+  }else{
+    // Был аудиозвонок — убираем видео-обёртку
+    const hadCam=localStream&&localStream.getVideoTracks().length>0;
+    if(!hadCam){
+      $('callVidWrap').classList.remove('show');
+      $('callAudUI').style.display='';
+    }else{
+      $('localVideo').srcObject=localStream;
+    }
+  }
+
+  toast('Демонстрация экрана остановлена');
+}
+
+function updateScreenShareBtn(){
+  const btn=$('screenShareBtn'),lbl=$('screenShareLbl');
+  if(btn){
+    btn.innerHTML=icoSvg(isScreenSharing?'i-screen-share-off':'i-screen-share');
+    btn.className='cbtn'+(isScreenSharing?' screen-active':'');
+  }
+  if(lbl)lbl.textContent=isScreenSharing?'Стоп':'Экран';
 }
 
 // ── GROUPS ──
 function createGroup(name,members){
   const gid='g_'+Date.now();
-  groups[gid]={name,members:[myId,...members],admin:myId};grpHist[gid]=[];
-  const inv={type:'group_invite',gid,name,members:groups[gid].members,admin:myId};
+  groups[gid]={name,members:[myUsername,...members],admin:myUsername};grpHist[gid]=[];
+  const inv={type:'group_invite',gid,name,members:groups[gid].members,admin:myUsername};
   members.forEach(pid=>{if(conns[pid]?.open)sendData(conns[pid],inv);});
   addSbGroup(gid);openChat(gid);sysMsg(gid,'Группа "'+name+'" создана!');saveAll();
 }
@@ -1580,19 +1838,19 @@ function recvGrpInvite(data){
   groups[data.gid]={name:data.name,members:data.members,admin:data.admin};grpHist[data.gid]=[];
   if(!$('si-'+data.gid))addSbGroup(data.gid);
   sysMsg(data.gid,'Тебя добавили в "'+data.name+'"');toast('Добавлен в "'+data.name+'"!');
-  data.members.forEach(pid=>{if(pid!==myId&&!conns[pid]?.open)silentConnect(pid);});saveAll();
+  data.members.forEach(pid=>{if(pid!==myUsername&&!conns[pid]?.open)silentConnect(pid);});saveAll();
 }
 function sendGrpMsg(gid,text){
   const g=groups[gid];if(!g)return;
   const msg={id:'gm'+Date.now(),sender:'me',text,time:nowTime()};
   if(!grpHist[gid])grpHist[gid]=[];grpHist[gid].push(msg);appendMsg(msg);scrollDown();
   updatePreview(gid,'Вы: '+text.slice(0,25));
-  const pkt={type:'group_msg',gid,text,nick:myNick||('Peer_'+myId?.slice(0,6)),avatar:myAvatar||null,sid:myId,mid:'gm'+Date.now(),time:nowTime()};
-  g.members.forEach(pid=>{if(pid!==myId&&conns[pid]?.open)sendData(conns[pid],pkt);});saveAll();
+  const pkt={type:'group_msg',gid,text,nick:myNick||('@'+myUsername),avatar:myAvatar||null,sid:myUsername,mid:'gm'+Date.now(),time:nowTime()};
+  g.members.forEach(pid=>{if(pid!==myUsername&&conns[pid]?.open)sendData(conns[pid],pkt);});saveAll();
 }
 function recvGrpMsg(data){
   if(!groups[data.gid])return;if(!grpHist[data.gid])grpHist[data.gid]=[];
-  const msg={id:data.mid,sender:'inc',name:peerNames[data.sid]||data.nick||'?',avatar:data.avatar||peerAvatars[data.sid]||null,text:data.text,time:data.time||nowTime()};
+  const msg={id:data.mid,sender:'inc',name:peerNames[data.sid]||data.nick||('@'+data.sid),avatar:data.avatar||peerAvatars[data.sid]||null,text:data.text,time:data.time||nowTime()};
   grpHist[data.gid].push(msg);
   if(activeChat===data.gid){appendMsg(msg);scrollDown();}
   else{addUnread(data.gid);toast((groups[data.gid]?.name||'Группа')+': '+msg.name+': '+data.text.slice(0,35));}
@@ -1638,7 +1896,7 @@ function onChatHeaderClick(){
   showPeerProfile(activeChat);
 }
 function showPeerProfile(pid){
-  const name=peerNames[pid]||pid.slice(0,14);
+  const name=peerNames[pid]||('@'+pid);
   const av=peerAvatars[pid];
   const isOnline=conns[pid]?.open;
   const bg=BG_COLORS[Math.abs(pid.split('').reduce((a,c)=>a+c.charCodeAt(0),0))%BG_COLORS.length];
@@ -1650,7 +1908,7 @@ function showPeerProfile(pid){
       ${avHtml}
       <div class="peer-prof-name">${esc(name)}</div>
       <div class="peer-prof-status">${isOnline?'🟢 В сети':'⚫ Не в сети'}</div>
-      <div class="peer-prof-id">${pid.slice(0,20)}…</div>
+      <div class="peer-prof-id">@${esc(pid)}</div>
       <div class="peer-prof-actions">
         <button class="peer-prof-btn peer-prof-btn-call" onclick="closeModal();startCallWithPerm('${pid}',false)">
           ${icoSvg('i-phone')} Позвонить
@@ -1669,8 +1927,8 @@ function showPeerProfile(pid){
         <div><div class="peer-prof-info-lbl">Имя</div><div class="peer-prof-info-val">${esc(name)}</div></div>
       </div>
       <div class="peer-prof-info-row">
-        <div class="peer-prof-info-ico">${icoSvg('i-key')}</div>
-        <div><div class="peer-prof-info-lbl">SLON ID</div><div class="peer-prof-info-val" style="font-family:monospace;font-size:11px">${pid}</div></div>
+        <div class="peer-prof-info-ico">${icoSvg('i-username')}</div>
+        <div><div class="peer-prof-info-lbl">Юзернейм</div><div class="peer-prof-info-val" style="font-family:monospace">@${esc(pid)}</div></div>
       </div>
       <div class="peer-prof-info-row">
         <div class="peer-prof-info-ico">${icoSvg('i-info')}</div>
@@ -1679,8 +1937,8 @@ function showPeerProfile(pid){
     </div>
     <div class="m-btns" style="margin-top:12px">
       <button class="btn-cancel" onclick="closeModal()">Закрыть</button>
-      <button class="btn-ok" onclick="navigator.clipboard.writeText('${pid}').then(()=>toast('ID скопирован!'))">
-        ${icoSvg('i-copy')} Скопировать ID
+      <button class="btn-ok" onclick="navigator.clipboard.writeText('@${pid}').then(()=>toast('Юзернейм скопирован!'))">
+        ${icoSvg('i-copy')} Скопировать
       </button>
     </div>
   `);
@@ -1712,7 +1970,7 @@ function updateChatHeader(){
       $('chAv').style.background='linear-gradient(135deg,var(--accent),var(--accent2))';
       $('chAv').innerHTML=icoSvg('i-person');
     }
-    $('chName').textContent=peerNames[id]||id.slice(0,14);
+    $('chName').textContent=peerNames[id]||('@'+id);
     $('chStatus').innerHTML=ok
       ?`<div class="status-dot online" style="width:7px;height:7px"></div> В сети`
       :`<div class="status-dot offline" style="width:7px;height:7px"></div> Не в сети`;
@@ -1730,7 +1988,7 @@ function updateReconBanner(){
   if(id==='ai'||id.startsWith('g_')||conns[id]?.open||currentView==='profile'){
     $('reconBanner').classList.remove('show');return;
   }
-  $('reconWho').textContent=peerNames[id]||id.slice(0,10);
+  $('reconWho').textContent='@'+(peerNames[id]||id);
   $('reconBanner').classList.add('show');
 }
 function reconnectCurrent(){
@@ -1750,7 +2008,7 @@ function addSbItem(pid){
       <div class="sb-av-dot" id="dot-${pid}"></div>
     </div>
     <div class="sb-info">
-      <div class="sb-name" id="sbn-${pid}">${esc((peerNames[pid]||'P2P').slice(0,18))}</div>
+      <div class="sb-name" id="sbn-${pid}">${esc((peerNames[pid]||('@'+pid)).slice(0,18))}</div>
       <div class="sb-prev" id="sbp-${pid}">Ожидание…</div>
     </div>
     <div class="sb-meta"><div id="badge-${pid}"></div></div>`;
@@ -1776,8 +2034,8 @@ function setSbStatus(pid,ok){
   if(activeChat===pid){updateChatHeader();updateReconBanner();}
 }
 function updateSbName(pid){
-  const el=$('sbn-'+pid);if(el)el.textContent=(peerNames[pid]||pid).slice(0,18);
-  if(activeChat===pid)$('chName').textContent=peerNames[pid]||pid.slice(0,14);
+  const el=$('sbn-'+pid);if(el)el.textContent=(peerNames[pid]||('@'+pid)).slice(0,18);
+  if(activeChat===pid)$('chName').textContent=peerNames[pid]||('@'+pid);
 }
 function updateSbAvatar(pid){
   const c=$('sav-'+pid);if(!c)return;const av=peerAvatars[pid];if(!av)return;
@@ -1801,443 +2059,528 @@ function filterSb(q){
 function toggleSidebar(){$('sidebar').classList.toggle('open');$('sbOverlay').classList.toggle('show');}
 function closeSidebar(){$('sidebar').classList.remove('open');$('sbOverlay').classList.remove('show');}
 function backToList(){if(window.innerWidth<=640)toggleSidebar();}
-function switchTab(tab){
-  if(tab==='chats'){toggleSidebar();$('bn-chats').classList.add('active');$('bn-profile').classList.remove('active');}
-  else if(tab==='profile')openProfile();
+function switchTab
+(tab){
+  if(tab==='chats'){
+    $('bn-chats').classList.add('active');$('bn-profile').classList.remove('active');
+    if(currentView==='profile'){closeProfilePage();openChat(activeChat);}
+  }else if(tab==='profile'){
+    openProfile();
+  }
 }
 
-// ── DEVICES ──
-async function loadDevices(){
-  const body=$('devBody');
-  body.innerHTML=`<div class="perm-box info"><svg><use href="#i-info"/></svg><span>Загрузка устройств…</span></div>`;
-  let devices=[];try{devices=await navigator.mediaDevices.enumerateDevices();}catch(e){}
-  const hasLabels=devices.some(d=>d.label?.trim());
-  const mics=devices.filter(d=>d.kind==='audioinput');
-  const spks=devices.filter(d=>d.kind==='audiooutput');
-  const cams=devices.filter(d=>d.kind==='videoinput');
-  let permStatus='unknown';
-  try{const r=await navigator.permissions.query({name:'microphone'});permStatus=r.state;}catch(e){}
-  let html='';
-  if(permStatus==='denied'){
-    html+=`<div class="perm-box err"><svg><use href="#i-warn"/></svg><span>Доступ к микрофону заблокирован.</span></div>`;
-  }else if(!hasLabels&&permStatus!=='granted'){
-    html+=`<div class="perm-box warn"><svg><use href="#i-warn"/></svg><span>Имена устройств скрыты до получения разрешения.</span><button class="perm-grant" onclick="devRequestPerm()">Разрешить</button></div>`;
-  }else{
-    html+=`<div class="perm-box ok"><svg><use href="#i-check"/></svg><span>Доступ открыт · ${mics.length} микр. · ${spks.length} дин. · ${cams.length} кам.</span></div>`;
-  }
-  html+=`<div class="dev-grp"><div class="dev-grp-lbl"><svg><use href="#i-mic"/></svg> Микрофон</div><div class="dev-list" id="micList">`;
-  if(mics.length){mics.forEach((d,i)=>{const lbl=d.label?.trim()||`Микрофон ${i+1}`;const sel=selMic?d.deviceId===selMic:i===0;html+=devCardHtml(d,'mic',lbl,sel);});}
-  else html+=`<div class="dev-empty">Устройства не обнаружены</div>`;
-  html+=`</div></div>`;
-  const canSpk=typeof $('remAudio').setSinkId==='function';
-  html+=`<div class="dev-grp"><div class="dev-grp-lbl"><svg><use href="#i-speaker"/></svg> Динамик</div><div class="dev-list" id="spkList">`;
-  if(!canSpk)html+=`<div class="dev-empty">Доступно только в Chrome/Edge</div>`;
-  else if(spks.length){spks.forEach((d,i)=>{const lbl=d.label?.trim()||`Динамик ${i+1}`;const sel=selSpk?d.deviceId===selSpk:i===0;html+=devCardHtml(d,'spk',lbl,sel);});}
-  else html+=`<div class="dev-empty">Устройства не обнаружены</div>`;
-  html+=`</div></div>`;
-  if(cams.length){
-    html+=`<div class="dev-grp"><div class="dev-grp-lbl"><svg><use href="#i-video"/></svg> Камера</div><div class="dev-list" id="camList">`;
-    cams.forEach((d,i)=>{const lbl=d.label?.trim()||`Камера ${i+1}`;const sel=selCam?d.deviceId===selCam:i===0;html+=devCardHtml(d,'cam',lbl,sel);});
-    html+=`</div></div>`;
-  }
-  html+=`<button class="dev-ref" onclick="loadDevices()"><span class="spin">${icoSvg('i-refresh')}</span> Обновить список</button>`;
-  body.innerHTML=html;
-  body.querySelectorAll('.dev-card[data-kind]').forEach(card=>{
-    card.onclick=()=>{
-      const kind=card.dataset.kind,did=card.dataset.did;
-      body.querySelectorAll(`.dev-card[data-kind="${kind}"]`).forEach(c=>{c.classList.remove('sel');c.querySelector('.dev-chk').innerHTML='';});
-      card.classList.add('sel');card.querySelector('.dev-chk').innerHTML=icoSvg('i-check');
-      const nm=card.querySelector('.dev-nm')?.textContent||'';
-      if(kind==='mic'){selMic=did;LS.set('sl_mic',did);toast('Микрофон: '+nm.slice(0,35));}
-      if(kind==='spk'){selSpk=did;LS.set('sl_spk',did);if(typeof $('remAudio').setSinkId==='function')$('remAudio').setSinkId(did==='default'?'':did).catch(()=>{});toast('Динамик: '+nm.slice(0,35));}
-      if(kind==='cam'){selCam=did;LS.set('sl_cam',did);toast('Камера: '+nm.slice(0,35));}
-    };
-  });
+// ── NET STATUS ──
+function setNet(ok,txt){
+  const dot=$('netDot'),dtxt=$('netTxt');
+  const od=$('onlineDot');
+  if(dot){dot.className='status-dot '+(ok?'online':'connecting');}
+  if(od){od.className='status-dot '+(ok?'online':'connecting');}
+  if(dtxt)dtxt.textContent=txt||'';
 }
-function devCardHtml(d,kind,lbl,isSel){
-  let icoId='i-mic';if(kind==='spk')icoId='i-speaker';if(kind==='cam')icoId='i-video';
-  const clean=lbl.replace(/\s*$Default$/i,'').replace(/\s*$По умолчанию$/i,'').trim();
-  const sub=d.deviceId==='default'?'По умолчанию':(d.deviceId?d.deviceId.slice(0,12)+'…':'');
-  return `<div class="dev-card${isSel?' sel':''}" data-kind="${kind}" data-did="${d.deviceId}">
-    <div class="dev-ico">${icoSvg(icoId)}</div>
-    <div style="flex:1;min-width:0"><div class="dev-nm">${esc(clean)}</div><div class="dev-sub">${sub}</div></div>
-    <div class="dev-chk">${isSel?icoSvg('i-check'):''}</div>
-  </div>`;
+function setMyLabel(){
+  const el=$('myIdLabel');
+  if(el)el.textContent=(myNick?myNick+' · ':'')+'@'+myUsername+(hasElephantBadge?' 🐘':'');
 }
-async function devRequestPerm(){
-  try{const s=await navigator.mediaDevices.getUserMedia({audio:true});s.getTracks().forEach(t=>t.stop());toast('Разрешение получено!');}catch(e){toast('Разрешение не получено');}
-  loadDevices();
-}
-function showDevPanel(){$('devOverlay').classList.add('show');loadDevices();}
-function hideDevPanel(){$('devOverlay').classList.remove('show');}
 
-// ── PROFILE ──
+// ── PROFILE DISPLAY ──
 function updateProfileDisplay(){
-  const bg=BG_COLORS.find(c=>c.id===myProfileBg)||BG_COLORS[0];
-  $('profHeroBg').style.background=bg.grad;
-  const profAvEl=$('profAvEl');profAvEl.innerHTML='';
-  if(myAvatar){const i=document.createElement('img');i.src=myAvatar;profAvEl.appendChild(i);}
-  else profAvEl.innerHTML=icoSvg('i-person');
-  $('profNameEl').innerHTML=(hasElephantBadge?'<span class="elephant-badge earned">🐘</span> ':'')+esc(myNick||'Без имени');
-  const bioEl=$('profBioEl');
-  if(myBio){bioEl.textContent=myBio;bioEl.style.display='';}else bioEl.style.display='none';
-  if(myId){$('profIdPill').textContent=myId.slice(0,18)+'…';}else $('profIdPill').textContent='ID загружается…';
-  $('profNickVal').textContent=myNick||'Не задано';
-  $('profBioVal').textContent=myBio||'Не задано';
-  $('profIdVal').textContent=myId?myId.slice(0,28)+'…':'—';
-  $('removeAvRow').style.display=myAvatar?'flex':'none';
-  buildProfileColors();buildThemeGrids();
-  const btn=$('profBtn');btn.innerHTML='';
-  if(myAvatar){const i=document.createElement('img');i.src=myAvatar;btn.appendChild(i);}
-  else{const s=document.createElement('span');s.className='prof-initials';s.innerHTML=myNick?myNick[0].toUpperCase():icoSvg('i-person');btn.appendChild(s);}
-  const bnAv=$('bnProfAv');
-  if(bnAv){bnAv.innerHTML='';if(myAvatar){const i=document.createElement('img');i.src=myAvatar;bnAv.appendChild(i);}else bnAv.innerHTML=icoSvg('i-person');}
-  const sc=$('secretCodeStatus');
-  if(sc){
-    if(hasElephantBadge){sc.style.display='block';sc.style.color='var(--accent)';sc.textContent='🐘 Значок Слона активирован!';}
-    else{sc.style.display='none';}
+  const bg=BG_COLORS.find(b=>b.id===myProfileBg)||BG_COLORS[0];
+  const bgEl=$('profHeroBg');if(bgEl)bgEl.style.background=bg.grad;
+  const avEl=$('profAvEl');
+  if(avEl){
+    avEl.innerHTML='';
+    if(myAvatar){const i=document.createElement('img');i.src=myAvatar;avEl.appendChild(i);}
+    else avEl.innerHTML=icoSvg('i-person');
   }
+  const nameEl=$('profNameEl');
+  if(nameEl){
+    nameEl.innerHTML='';
+    nameEl.textContent=myNick||('@'+myUsername);
+    if(hasElephantBadge){const sp=document.createElement('span');sp.className='elephant-badge earned';sp.textContent='🐘';nameEl.appendChild(sp);}
+  }
+  const bioEl=$('profBioEl');
+  if(bioEl){bioEl.textContent=myBio||'';bioEl.style.display=myBio?'':'none';}
+  const pill=$('profIdPill');if(pill)pill.textContent='@'+myUsername;
+  const nv=$('profNickVal');if(nv)nv.textContent=myNick||'Не задано';
+  const bv=$('profBioVal');if(bv)bv.textContent=myBio||'Не задано';
+  const iv=$('profIdVal');if(iv)iv.textContent='@'+myUsername;
+  const remRow=$('removeAvRow');if(remRow)remRow.style.display=myAvatar?'':'none';
+  // Profile button
+  const pb=$('profBtnContent');
+  if(pb){
+    if(myAvatar){
+      const img=document.createElement('img');img.src=myAvatar;img.style.cssText='width:34px;height:34px;object-fit:cover;border-radius:7px';
+      const btn=$('profBtn');btn.innerHTML='';btn.appendChild(img);
+    }else{
+      const btn=$('profBtn');btn.innerHTML='';
+      const sp=document.createElement('span');sp.className='prof-initials';
+      sp.innerHTML=icoSvg('i-person');btn.appendChild(sp);
+    }
+  }
+  // Bottom nav avatar
+  const bnAv=$('bnProfAv');
+  if(bnAv){
+    bnAv.innerHTML='';
+    if(myAvatar){const i=document.createElement('img');i.src=myAvatar;bnAv.appendChild(i);}
+    else bnAv.innerHTML=icoSvg('i-person');
+  }
+  // Profile colors
+  const pc=$('profColors');
+  if(pc){
+    pc.innerHTML='';
+    BG_COLORS.forEach(c=>{
+      const d=document.createElement('div');d.className='prof-color'+(c.id===myProfileBg?' sel':'');
+      d.style.background=c.grad;d.onclick=()=>setProfileBg(c.id);pc.appendChild(d);
+    });
+  }
+  setMyLabel();
 }
-function buildProfileColors(){
-  const c=$('profColors');if(!c)return;c.innerHTML='';
-  BG_COLORS.forEach(col=>{
-    const d=document.createElement('div');d.className='prof-color'+(col.id===myProfileBg?' sel':'');
-    d.style.background=col.grad;d.onclick=()=>setProfileBg(col.id);c.appendChild(d);
-  });
+
+function setProfileBg(id){
+  myProfileBg=id;saveAll();updateProfileDisplay();toast('Фон профиля изменён');
 }
-function setProfileBg(id){myProfileBg=id;LS.set('sl_pbg',id);updateProfileDisplay();}
+
 function editNick(){
-  showModal(`<div class="m-title">Имя</div>
-    <p class="m-info">Имя видно всем собеседникам.</p>
-    <input class="m-inp" id="nickInp" placeholder="Твоё имя…" maxlength="32" value="${esc(myNick)}">
-    <div class="m-btns"><button class="btn-cancel" onclick="closeModal()">Отмена</button><button class="btn-ok" onclick="saveNick()">Сохранить</button></div>`);
+  showModal(`
+    <div class="m-title">✏️ Изменить имя</div>
+    <input class="m-inp" id="nickInp" placeholder="Твоё имя" maxlength="32" value="${esc(myNick)}" onkeydown="if(event.key==='Enter')saveNick()">
+    <div class="m-btns">
+      <button class="btn-cancel" onclick="closeModal()">Отмена</button>
+      <button class="btn-ok" onclick="saveNick()">Сохранить</button>
+    </div>
+  `);
+  setTimeout(()=>$('nickInp')?.focus(),100);
 }
 function saveNick(){
-  const n=$('nickInp').value.trim().slice(0,32);myNick=n;saveAll();setMyLabel();
-  Object.values(conns).forEach(c=>{if(c?.open)sendData(c,{type:'hello',nick:n,avatar:myAvatar||null,bio:myBio||''});});
-  closeModal();updateProfileDisplay();toast('Имя сохранено');
+  const v=($('nickInp')?.value||'').trim().slice(0,32);
+  myNick=v;saveAll();updateProfileDisplay();
+  Object.values(conns).forEach(c=>{if(c?.open)sendData(c,{type:'hello',nick:myNick,avatar:myAvatar||null,bio:myBio||'',username:myUsername});});
+  closeModal();toast('Имя обновлено');
 }
+
 function editBio(){
-  showModal(`<div class="m-title">Биография</div>
+  showModal(`
+    <div class="m-title">📝 Биография</div>
     <textarea class="m-ta" id="bioInp" placeholder="Расскажи о себе…" maxlength="200">${esc(myBio)}</textarea>
-    <div class="m-btns"><button class="btn-cancel" onclick="closeModal()">Отмена</button><button class="btn-ok" onclick="saveBio()">Сохранить</button></div>`);
+    <div class="m-btns">
+      <button class="btn-cancel" onclick="closeModal()">Отмена</button>
+      <button class="btn-ok" onclick="saveBio()">Сохранить</button>
+    </div>
+  `);
+  setTimeout(()=>$('bioInp')?.focus(),100);
 }
-function saveBio(){const b=$('bioInp')?.value.trim().slice(0,200)||'';myBio=b;saveAll();closeModal();updateProfileDisplay();toast('Bio сохранено');}
-function removeAvatar(){
-  myAvatar=null;saveAll();updateProfileDisplay();
-  Object.values(conns).forEach(c=>{if(c?.open)sendData(c,{type:'hello',nick:myNick,avatar:null});});
-  toast('Фото удалено');
+function saveBio(){
+  myBio=($('bioInp')?.value||'').trim().slice(0,200);
+  saveAll();updateProfileDisplay();
+  Object.values(conns).forEach(c=>{if(c?.open)sendData(c,{type:'hello',nick:myNick,avatar:myAvatar||null,bio:myBio,username:myUsername});});
+  closeModal();toast('Биография обновлена');
 }
+
 async function handleAvatarUpload(inp){
-  const file=inp.files[0];if(!file)return;
-  if(file.size>5*1024*1024){toast('Фото > 5 МБ');inp.value='';return;}
-  inp.value='';
+  const file=inp.files[0];if(!file)return;inp.value='';
+  if(file.size>5*1024*1024){toast('Фото > 5 МБ');return;}
   const reader=new FileReader();
   reader.onload=async e=>{
-    const thumb=await makeThumb(e.target.result,128,0.85);
-    myAvatar=thumb||e.target.result;saveAll();updateProfileDisplay();
-    Object.values(conns).forEach(c=>{if(c?.open)sendData(c,{type:'hello',nick:myNick,avatar:myAvatar,bio:myBio});});
-    toast('Фото обновлено!');
+    const thumb=await makeThumb(e.target.result,200,0.8);
+    myAvatar=thumb||e.target.result;
+    saveAll();updateProfileDisplay();
+    Object.values(conns).forEach(c=>{if(c?.open)sendData(c,{type:'hello',nick:myNick,avatar:myAvatar,bio:myBio||'',username:myUsername});});
+    toast('Фото профиля обновлено');
   };
   reader.readAsDataURL(file);
 }
+function removeAvatar(){
+  myAvatar=null;saveAll();updateProfileDisplay();
+  Object.values(conns).forEach(c=>{if(c?.open)sendData(c,{type:'hello',nick:myNick,avatar:null,bio:myBio||'',username:myUsername});});
+  toast('Фото удалено');
+}
+
+function showMyId(){
+  if(!myUsername){toast('Сначала выбери юзернейм');return;}
+  showModal(`
+    <div class="m-title">🐘 Мой юзернейм</div>
+    <div class="m-info">Поделись этим юзернеймом с друзьями — они найдут тебя через «➕ Контакт»</div>
+    <div class="m-idbox">
+      <div class="m-id">@${esc(myUsername)}</div>
+      <button class="btn-copy" onclick="copyMyId()">Копировать</button>
+    </div>
+    <div class="m-btns"><button class="btn-cancel" onclick="closeModal()">Закрыть</button></div>
+  `);
+}
 function copyMyId(){
-  if(!myId){toast('ID не готов');return;}
-  navigator.clipboard.writeText(myId).then(()=>toast('ID скопирован!')).catch(()=>toast(myId.slice(0,20)+'…'));
+  navigator.clipboard?.writeText('@'+myUsername).then(()=>toast('Юзернейм скопирован!')).catch(()=>toast('@'+myUsername));
+  closeModal();
 }
-function exportData(){
-  const d={version:1,exported:new Date().toISOString(),peerNames,myNick,myBio,myProfileBg,
-    groups:Object.keys(groups).reduce((o,k)=>({...o,[k]:{name:groups[k].name,members:groups[k].members}}),{})};
-  const blob=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='slon_backup_'+Date.now()+'.json';a.click();
-  toast('Экспорт готов!');
+
+// ── MODALS ──
+function showModal(html){$('mbox').innerHTML=html;$('modal').classList.add('show');}
+function closeModal(){$('modal').classList.remove('show');}
+
+function showAddContact(){
+  showModal(`
+    <div class="m-title">➕ Добавить контакт</div>
+    <div class="m-info">Введи юзернейм собеседника (без @). Например: <b>ivan_petrov</b></div>
+    <input class="m-inp" id="addPidInp" placeholder="юзернейм" maxlength="20"
+      autocomplete="off" autocapitalize="none" spellcheck="false"
+      oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9_]/g,'')"
+      onkeydown="if(event.key==='Enter')doAddContact()">
+    <input class="m-inp" id="addNickInp" placeholder="Псевдоним (необязательно)" maxlength="32" onkeydown="if(event.key==='Enter')doAddContact()">
+    <div class="m-btns">
+      <button class="btn-cancel" onclick="closeModal()">Отмена</button>
+      <button class="btn-ok" onclick="doAddContact()">Подключиться</button>
+    </div>
+  `);
+  setTimeout(()=>$('addPidInp')?.focus(),100);
 }
-function confirmClearAll(){
-  showModal(`<div class="m-title">Очистить всё?</div>
-    <p class="m-info">Удалит историю, контакты, настройки. Необратимо!</p>
-    <div class="m-btns"><button class="btn-cancel" onclick="closeModal()">Отмена</button><button class="btn-danger" onclick="clearAllData()">Удалить всё</button></div>`);
+function doAddContact(){
+  const pid=($('addPidInp')?.value||'').trim().toLowerCase().replace(/[^a-z0-9_]/g,'');
+  const nick=($('addNickInp')?.value||'').trim();
+  if(!pid){toast('Введи юзернейм');return;}
+  closeModal();
+  connectTo(pid,nick);
 }
-function clearAllData(){
-  ['sl_chats','sl_grpH','sl_groups','sl_names','sl_avs','sl_nick','sl_bio','sl_av','sl_pbg','sl_mic','sl_spk','sl_cam','sl_theme','sl_elephant'].forEach(k=>LS.del(k));
-  closeModal();toast('Удалено, перезагрузка…');setTimeout(()=>location.reload(),1500);
+
+function showCreateGroup(){
+  const online=Object.entries(conns).filter(([,c])=>c?.open).map(([pid])=>pid);
+  if(!online.length){toast('Сначала добавь контакты онлайн');return;}
+  const checks=online.map(pid=>`
+    <label class="cb-row">
+      <input type="checkbox" value="${pid}" id="chk-${pid}">
+      <span>${esc(peerNames[pid]||('@'+pid))}</span>
+    </label>`).join('');
+  showModal(`
+    <div class="m-title">👥 Создать группу</div>
+    <input class="m-inp" id="grpNameInp" placeholder="Название группы" maxlength="40">
+    <div class="m-sec">Участники:</div>
+    ${checks}
+    <div class="m-btns">
+      <button class="btn-cancel" onclick="closeModal()">Отмена</button>
+      <button class="btn-ok" onclick="doCreateGroup()">Создать</button>
+    </div>
+  `);
+}
+function doCreateGroup(){
+  const name=($('grpNameInp')?.value||'').trim();
+  if(!name){toast('Введи название');return;}
+  const members=[...document.querySelectorAll('#mbox input[type=checkbox]:checked')].map(el=>el.value);
+  if(!members.length){toast('Выбери хотя бы одного участника');return;}
+  closeModal();createGroup(name,members);
+}
+
+function showGroupInfo(gid){
+  const g=groups[gid];if(!g)return;
+  const mems=(g.members||[]).map(pid=>`<div style="padding:6px 0;font-size:13px;border-bottom:1px solid var(--border)">
+    ${esc(peerNames[pid]||('@'+pid))} ${pid===g.admin?'👑':''}${pid===myUsername?'(ты)':''}
+  </div>`).join('');
+  showModal(`
+    <div class="m-title">👥 ${esc(g.name)}</div>
+    <div class="m-sec">Участники (${g.members?.length||0}):</div>
+    ${mems}
+    <div class="m-btns" style="margin-top:12px">
+      <button class="btn-cancel" onclick="closeModal()">Закрыть</button>
+    </div>
+  `);
+}
+
+// ── DEVICES PANEL ──
+async function showDevPanel(){
+  $('devOverlay').classList.add('show');
+  await loadDevices();
+}
+function hideDevPanel(){$('devOverlay').classList.remove('show');}
+
+async function loadDevices(){
+  const body=$('devBody');
+  body.innerHTML=`<div class="perm-box info">${icoSvg('i-info')}<span>Загрузка устройств…</span></div>`;
+  if(!hasMediaDevices){
+    body.innerHTML=`<div class="perm-box err">${icoSvg('i-warn')}<span>WebRTC не поддерживается в этом браузере</span></div>`;return;
+  }
+
+  // Проверяем разрешение
+  let hasPerm=false;
+  try{
+    const r=await navigator.permissions.query({name:'microphone'});
+    hasPerm=r.state==='granted';
+  }catch(e){}
+
+  let devices=[];
+  try{
+    if(!hasPerm){
+      // Запрашиваем доступ для получения меток
+      const s=await navigator.mediaDevices.getUserMedia({audio:true});
+      s.getTracks().forEach(t=>t.stop());
+      hasPerm=true;
+    }
+    devices=await navigator.mediaDevices.enumerateDevices();
+  }catch(e){
+    body.innerHTML=`
+      <div class="perm-box warn">${icoSvg('i-warn')}<span>Нет доступа к микрофону</span>
+        <button class="perm-grant" onclick="showPermRequest(false,()=>{hideDevPanel();showDevPanel();},()=>{})">Разрешить</button>
+      </div>`;
+    return;
+  }
+
+  const mics=devices.filter(d=>d.kind==='audioinput');
+  const spks=devices.filter(d=>d.kind==='audiooutput');
+  const cams=devices.filter(d=>d.kind==='videoinput');
+  const hasSink=typeof HTMLMediaElement.prototype.setSinkId==='function';
+
+  const devCard=(d,type,selId)=>{
+    const isSel=(selId&&selId!=='default')?d.deviceId===selId:d.deviceId==='default'||mics.indexOf(d)===0&&!selId;
+    const ico=type==='mic'?'i-mic':type==='cam'?'i-video':'i-speaker';
+    return `<div class="dev-card${isSel?' sel':''}" onclick="selectDev('${type}','${d.deviceId}',this)">
+      <div class="dev-ico">${icoSvg(ico)}</div>
+      <div style="flex:1;min-width:0">
+        <div class="dev-nm">${esc(d.label||d.deviceId.slice(0,16)+'…')}</div>
+        <div class="dev-sub">${d.deviceId==='default'?'По умолчанию':d.deviceId.slice(0,12)+'…'}</div>
+      </div>
+      <div class="dev-chk">${icoSvg('i-check')}</div>
+    </div>`;
+  };
+
+  let html=`<div class="perm-box ok">${icoSvg('i-ok')}<span>Разрешение выдано</span>
+    <span class="dev-live-badge">● LIVE</span></div>`;
+
+  if(activeCall){
+    html+=`<div class="perm-box info">${icoSvg('i-info')}<span>Звонок активен — смена устройства применится сразу</span></div>`;
+  }
+
+  html+=`<div class="dev-grp"><div class="dev-grp-lbl">${icoSvg('i-mic')} Микрофон</div><div class="dev-list" id="devMicList">`;
+  if(mics.length){mics.forEach(d=>{html+=devCard(d,'mic',selMic);});}
+  else html+=`<div class="dev-empty">Микрофоны не найдены</div>`;
+  html+=`</div></div>`;
+
+  html+=`<div class="dev-grp"><div class="dev-grp-lbl">${icoSvg('i-video')} Камера</div><div class="dev-list" id="devCamList">`;
+  if(cams.length){cams.forEach(d=>{html+=devCard(d,'cam',selCam);});}
+  else html+=`<div class="dev-empty">Камеры не найдены</div>`;
+  html+=`</div></div>`;
+
+  html+=`<div class="dev-grp"><div class="dev-grp-lbl">${icoSvg('i-speaker')} Динамик</div>`;
+  if(!hasSink){html+=`<div class="dev-empty">Выбор динамика не поддерживается браузером</div>`;}
+  else{
+    html+=`<div class="dev-list" id="devSpkList">`;
+    if(spks.length){spks.forEach(d=>{html+=devCard(d,'spk',selSpk);});}
+    else html+=`<div class="dev-empty">Динамики не найдены</div>`;
+    html+=`</div>`;
+  }
+  html+=`</div>`;
+
+  html+=`<button class="dev-ref" onclick="loadDevices()"><svg class="spin" style="display:inline;width:15px;height:15px"><use href="#i-refresh"/></svg> Обновить список</button>`;
+  body.innerHTML=html;
+}
+
+async function selectDev(type,deviceId,card){
+  // Снимаем выделение в группе
+  const list=card.closest('.dev-list');
+  list?.querySelectorAll('.dev-card').forEach(c=>c.classList.remove('sel'));
+  card.classList.add('sel');
+
+  if(type==='mic'){
+    selMic=deviceId;saveAll();
+    if(activeCall&&localStream){
+      // Заменяем аудиотрек в активном звонке
+      try{
+        const ac={echoCancellation:true,noiseSuppression:true,autoGainControl:true};
+        if(deviceId&&deviceId!=='default')ac.deviceId={exact:deviceId};
+        const s=await navigator.mediaDevices.getUserMedia({audio:ac});
+        const newTrack=s.getAudioTracks()[0];
+        if(newTrack){
+          const pc=activeCall.call.peerConnection;
+          const sender=pc?.getSenders().find(s=>s.track?.kind==='audio');
+          if(sender)await sender.replaceTrack(newTrack);
+          localStream.getAudioTracks().forEach(t=>{t.stop();localStream.removeTrack(t);});
+          localStream.addTrack(newTrack);
+          toast('Микрофон переключён');
+        }
+      }catch(e){toast('Не удалось переключить микрофон: '+(e.message||e.name));}
+    }else toast('Микрофон выбран');
+  }else if(type==='cam'){
+    selCam=deviceId;saveAll();
+    if(activeCall&&localStream){
+      const videoTracks=localStream.getVideoTracks();
+      if(videoTracks.length){
+        try{
+          const vc={facingMode:'user'};
+          if(deviceId&&deviceId!=='default')vc.deviceId={exact:deviceId};
+          const s=await navigator.mediaDevices.getUserMedia({video:vc});
+          const newTrack=s.getVideoTracks()[0];
+          if(newTrack){
+            const pc=activeCall.call.peerConnection;
+            const sender=pc?.getSenders().find(s=>s.track?.kind==='video');
+            if(sender)await sender.replaceTrack(newTrack);
+            videoTracks.forEach(t=>{t.stop();localStream.removeTrack(t);});
+            localStream.addTrack(newTrack);
+            $('localVideo').srcObject=localStream;
+            toast('Камера переключена');
+          }
+        }catch(e){toast('Не удалось переключить камеру: '+(e.message||e.name));}
+      }else toast('Камера выбрана (применится при следующем звонке)');
+    }else toast('Камера выбрана');
+  }else if(type==='spk'){
+    selSpk=deviceId;saveAll();
+    const a=$('remAudio');
+    if(a&&typeof a.setSinkId==='function'){
+      a.setSinkId(deviceId).then(()=>toast('Динамик переключён')).catch(e=>toast('Ошибка: '+e.message));
+    }
+  }
+}
+
+// ── AI REPLY ──
+function aiReply(txt){
+  const t=txt.toLowerCase();
+  if(t.includes('привет')||t.includes('здравствуй')||t.includes('хай'))
+    return'Привет! 🐘 Чем могу помочь?';
+  if(t.includes('как дела')||t.includes('как ты'))
+    return'Отлично, спасибо что спросил! Всегда готов помочь 🐘';
+  if(t.includes('slon')||t.includes('слон'))
+    return'SLON — это защищённый P2P мессенджер. Общение идёт напрямую между устройствами без сервера! 🐘';
+  if(t.includes('помог')||t.includes('help')||t.includes('что умеешь'))
+    return'Я СЛОН AI! Могу поддержать беседу, пока ты ждёшь друзей онлайн 🐘 Добавь контакт через ➕';
+  if(t.includes('звонок')||t.includes('позвони'))
+    return'Для звонка добавь контакт через ➕, дождись чтобы он был онлайн, и нажми кнопку звонка 📞';
+  if(t.includes('юзернейм')||t.includes('username')||t.includes('id'))
+    return'Твой юзернейм показан в верхней панели. Поделись им с другом — он добавит тебя через ➕ Контакт 🐘';
+  if(t.includes('тема')||t.includes('цвет')||t.includes('оформлен'))
+    return'Тему можно менять в ⚙ (иконка палитры) — доступно 9 тем! 🎨';
+  if(t.includes('пока')||t.includes('до свидания')||t.includes('bye'))
+    return'Пока-пока! 🐘 Возвращайся!';
+  if(t.includes('спасибо')||t.includes('благодар'))
+    return'Всегда пожалуйста! 🐘';
+  const replies=[
+    'Интересно! Расскажи подробнее 🐘',
+    'Понял тебя! Что-то ещё? 🐘',
+    'Хм, дай подумаю... 🤔🐘',
+    'Отличная мысль! 🐘',
+    'Я весь внимание! 🐘',
+    'Согласен с тобой 🐘',
+  ];
+  return replies[Math.floor(Math.random()*replies.length)];
+}
+
+// ── HELPERS ──
+function scrollDown(){
+  const m=$('msgs');if(m)requestAnimationFrame(()=>{m.scrollTop=m.scrollHeight;});
+}
+function resizeInp(el){
+  el.style.height='auto';
+  el.style.height=Math.min(el.scrollHeight,100)+'px';
+}
+function handleKey(e){
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}
 }
 
 // ── SECRET CODE ──
 function checkSecretCode(){
-  const inp=$('secretCodeInp');
-  const code=inp.value.trim();
-  const status=$('secretCodeStatus');
-  if(code==='471447146'){
-    if(hasElephantBadge){
-      status.style.display='block';status.style.color='var(--accent)';
-      status.textContent='🐘 Значок уже активирован!';inp.value='';return;
+  const inp=$('secretCodeInp'),st=$('secretCodeStatus');
+  const code=(inp?.value||'').trim();
+  if(!code)return;
+  if(code==='SLON_ELEPHANT_2024'||code==='слон'||code==='elephant'){
+    if(!hasElephantBadge){
+      hasElephantBadge=true;saveAll();
+      inp.value='';
+      if(st){st.textContent='✅ Значок активирован!';st.style.display='block';st.style.color='var(--online)';}
+      showEpicOverlay();
+    }else{
+      if(st){st.textContent='🐘 Значок уже активирован!';st.style.display='block';}
     }
-    hasElephantBadge=true;saveAll();inp.value='';
-    closeModal();showEpicElephant();
   }else{
-    status.style.display='block';status.style.color='var(--red)';
-    status.textContent='❌ Неверный код';inp.value='';
-    inp.style.borderColor='var(--red)';
-    setTimeout(()=>{inp.style.borderColor='';status.style.display='none';},2500);
+    if(st){st.textContent='❌ Неверный код';st.style.display='block';st.style.color='var(--red)';}
+    inp.classList.add('err');setTimeout(()=>inp.classList.remove('err'),800);
   }
 }
 
-// ── EPIC ELEPHANT ──
-function showEpicElephant(){
-  const overlay=$('epicOverlay');
-  const starsEl=$('epicStars');starsEl.innerHTML='';
-  for(let i=0;i<80;i++){
+// ── EPIC OVERLAY ──
+function showEpicOverlay(){
+  const ov=$('epicOverlay');ov.classList.add('show');
+  // Stars
+  const stars=$('epicStars');stars.innerHTML='';
+  for(let i=0;i<60;i++){
     const s=document.createElement('div');s.className='epic-star';
-    const size=Math.random()*4+1;
-    s.style.cssText=`width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*2}s;animation-duration:${0.5+Math.random()*1.5}s`;
-    starsEl.appendChild(s);
+    s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${2+Math.random()*4}px;height:${2+Math.random()*4}px;animation-delay:${Math.random()*2}s;animation-duration:${0.5+Math.random()}s`;
+    stars.appendChild(s);
   }
-  const raysEl=$('epicRays');raysEl.innerHTML='';
+  // Rays
+  const rays=$('epicRays');rays.innerHTML='';
   for(let i=0;i<12;i++){
     const r=document.createElement('div');r.className='epic-ray';
-    r.style.transform=`rotate(${i*30}deg)`;raysEl.appendChild(r);
+    r.style.transform=`rotate(${i*30}deg)`;rays.appendChild(r);
   }
-  const confEl=$('epicConfetti');confEl.innerHTML='';
-  const confColors=['#c084fc','#f472b6','#38bdf8','#4ade80','#fb923c','#f59e0b','#818cf8','#e879f9'];
-  for(let i=0;i<60;i++){
+  // Confetti
+  const conf=$('epicConfetti');conf.innerHTML='';
+  const colors=['#c084fc','#f0abfc','#818cf8','#38bdf8','#4ade80','#fb923c','#f472b6'];
+  for(let i=0;i<40;i++){
     const p=document.createElement('div');p.className='epic-conf-piece';
-    const color=confColors[Math.floor(Math.random()*confColors.length)];
-    const delay=Math.random()*2;const dur=2+Math.random()*2;
-    p.style.cssText=`left:${Math.random()*100}%;background:${color};animation-delay:${delay}s;animation-duration:${dur}s;border-radius:${Math.random()>0.5?'50%':'2px'};width:${6+Math.random()*8}px;height:${6+Math.random()*8}px`;
-    confEl.appendChild(p);
+    p.style.cssText=`left:${Math.random()*100}%;background:${colors[Math.floor(Math.random()*colors.length)]};animation-delay:${Math.random()*2}s;animation-duration:${2+Math.random()*3}s`;
+    conf.appendChild(p);
   }
-  const partEl=$('epicParticles');partEl.innerHTML='';
-  for(let i=0;i<30;i++){
-    const p=document.createElement('div');p.className='epic-particle';
-    const angle=Math.random()*Math.PI*2;const dist=100+Math.random()*200;
-    const color=confColors[Math.floor(Math.random()*confColors.length)];
-    p.style.cssText=`left:50%;top:50%;width:${4+Math.random()*8}px;height:${4+Math.random()*8}px;background:${color};--tx:${Math.cos(angle)*dist}px;--ty:${Math.sin(angle)*dist}px;animation-delay:${Math.random()*0.5}s;animation-duration:${1+Math.random()}s;border-radius:50%`;
-    partEl.appendChild(p);
-  }
-  overlay.classList.add('show');
-  if(navigator.vibrate)navigator.vibrate([100,50,100,50,200,100,500]);
+  updateProfileDisplay();
 }
 function closeEpicOverlay(){
   $('epicOverlay').classList.remove('show');
   updateProfileDisplay();
-  toast('🐘 Значок Слона активирован навсегда!',4000);
+  toast('🐘 Ты теперь Легенда Слона!',5000);
 }
 
-// ══════════════════════════════════════════
-// SLON AI
-// ══════════════════════════════════════════
-const AI_RULES=[
-  [/^(привет|хай|хей|здарова|здравствуй|ку|йоу|hello|hi|hey|yo)[\s!]*$/i,
-    ['Привет! 🐘 Чем могу помочь?','Хай! Рад тебя видеть 🐘','Привет-привет! Как дела?','Йоу! 🐘 Что нового?','Здарова! Чем займёмся?']],
-  [/как дела|как ты|как жизнь|как сам|как поживаешь|что нового|как настроение/i,
-    ['Отлично! Помогаю людям общаться 🐘','Всё хорошо, спасибо что спросил!','Работаю в штатном режиме 🐘 А у тебя как?','Великолепно! Готов помочь с любым вопросом.']],
-  [/как тебя зовут|твоё имя|кто ты|что ты такое|ты кто/i,
-    ['Я СЛОН AI — умный ассистент мессенджера SLON 🐘','Меня зовут СЛОН! Я встроенный AI помощник.','СЛОН AI к вашим услугам 🐘 Создан командой SLON.']],
-  [/p2p|как подключиться|как добавить|добавить контакт|peer id|как найти друга/i,
-    ['Для P2P подключения:\n1. Нажми кнопку профиля → скопируй свой ID\n2. Отправь ID другу любым способом\n3. Друг нажимает ➕ Контакт → вставляет твой ID\n4. Готово! 🐘 Прямое зашифрованное соединение установлено.']],
-  [/мой id|скопировать id|где id|найти id|свой id/i,
-    ['Твой SLON ID находится в профиле (кнопка в правом верхнем углу). Там же кнопка «Скопировать ID» 🐘']],
-  [/звон|позвонить|аудио|голосовой|call/i,
-    ['Для звонка:\n1. Добавь контакт через ➕\n2. Дождись соединения (зелёная точка)\n3. Нажми 📞 в шапке чата\nМожно также свернуть звонок кнопкой «Свернуть» 🐘']],
-  [/видео|видеозвонок|webcam|камера для звонка/i,
-    ['Видеозвонок работает так же как аудио, но нажми кнопку 🎥 вместо 📞. Убедись что браузер имеет доступ к камере 🐘']],
-  [/тема|цвет|оформление|интерфейс|скин/i,
-    ['В SLON доступно 9 тем:\n🌙 Тёмная · ☀️ Светлая · 🌸 Розовая\n💜 Фиолет · 🌊 Океан · 🌌 Галактика\n🌿 Природа · 🌅 Закат · 🍂 Осень\nНажми кнопку 🎨 в шапке чтобы выбрать!']],
-  [/тёмная тема|dark theme|ночной режим/i,['Тёмная тема — классика! Нажми 🎨 и выбери «Тёмная» 🌙']],
-  [/светлая тема|light theme|белая тема/i,['Светлая тема подходит для дневного использования ☀️ Нажми 🎨 → «Светлая»']],
-  [/розовая|pink/i,['Розовая тема — самая нежная 🌸 Нажми 🎨 → «Розовая»']],
-  [/фиолетовая|purple|фиолет/i,['Фиолетовая тема создаёт мистическую атмосферу 💜 Нажми 🎨 → «Фиолет»']],
-  [/океан|ocean|синяя тема/i,['Тема «Океан» — глубокий синий 🌊 Нажми 🎨 → «Океан»']],
-  [/галактика|galaxy|космос/i,['Тема «Галактика» — для любителей звёзд 🌌 Нажми 🎨 → «Галактика»']],
-  [/природа|green|зелёная/i,['Тема «Природа» — свежий зелёный 🌿 Нажми 🎨 → «Природа»']],
-  [/закат|sunset|оранжевая/i,['Тема «Закат» — тёплые оранжевые тона 🌅 Нажми 🎨 → «Закат»']],
-  [/осень|autumn|жёлтая тема/i,['Тема «Осень» — золото и красный 🍂 Нажми 🎨 → «Осень»']],
-  [/группа|создать группу|групповой чат|group/i,
-    ['Для создания группы:\n1. Нажми кнопку «Группа» внизу списка чатов\n2. Введи название\n3. Выбери участников из контактов\n4. Нажми «Создать» 🐘']],
-  [/файл|отправить файл|прикрепить|фото|картинка|изображение/i,
-    ['Для отправки файла нажми кнопку 📎 рядом с полем ввода. Поддерживаются: изображения, PDF, ZIP, MP3, MP4, DOCX, XLSX. Максимум 20 МБ 🐘']],
-  [/безопасность|шифрование|приватность|безопасно ли|данные/i,
-    ['SLON использует P2P протокол — данные передаются напрямую между устройствами без серверов! WebRTC обеспечивает шифрование DTLS/SRTP 🔒🐘']],
-  [/андроид|android|телефон|мобильный|смартфон/i,
-    ['На Android:\n• Используй Chrome или Firefox\n• При звонке разреши доступ к микрофону\n• Если звук пропал — нажми кнопку «Нажми для звука» 🐘\n• SLON оптимизирован для мобильных!']],
-  [/ios|iphone|safari|айфон/i,
-    ['На iOS (Safari):\n• WebRTC работает с iOS 14.3+\n• Разреши доступ к микрофону в настройках Safari\n• Видеозвонки могут работать нестабильно 🐘']],
-  [/микрофон|разрешение|permission|доступ|заблокирован/i,
-    ['Если микрофон заблокирован:\n1. Нажми на замок/иконку в адресной строке браузера\n2. Найди «Микрофон» → выбери «Разрешить»\n3. Перезагрузи страницу 🐘']],
-  [/профиль|настройки профиля|аватар|фото профиля|имя|ник/i,
-    ['В профиле ты можешь:\n• Задать имя и биографию\n• Загрузить фото\n• Выбрать цвет фона\n• Поменять тему\n• Скопировать свой ID\nОткрой профиль кнопкой в правом верхнем углу 🐘']],
-  [/свернуть|мини.?звонок|minimize|фоновый режим/i,
-    ['Во время звонка нажми кнопку «Свернуть» — появится компактный виджет в углу экрана. Нажми на виджет чтобы развернуть 🐘']],
-  [/экспорт|backup|резервная копия|сохранить данные/i,
-    ['В профиле есть кнопка «Экспорт данных» — скачает JSON файл с контактами и настройками 🐘']],
-  [/очистить|удалить всё|сбросить|reset/i,
-    ['В профиле → «Очистить всё» удалит историю, контакты и настройки. Это необратимо! Сначала сделай экспорт 🐘']],
-  [/устройства|микрофон выбрать|динамик|наушники|камера выбрать|audio device/i,
-    ['Нажми кнопку ⚙️ в шапке → откроется панель устройств. Там можно выбрать микрофон, динамик и камеру 🐘']],
-  [/офлайн|не в сети|не подключается|connection|соединение|не работает/i,
-    ['Если собеседник не в сети:\n• Подожди — он может быть офлайн\n• Нажми «Подключиться» в баннере\n• Убедись что ID введён правильно\n• Проверь интернет-соединение 🐘']],
-  [/что умеешь|возможности|функции|фичи|features/i,
-    ['SLON умеет:\n🔒 P2P шифрованные сообщения\n📞 Аудио и видеозвонки\n📎 Отправка файлов до 20 МБ\n👥 Групповые чаты\n🎨 9 тем оформления\n📱 Мобильная версия\n🐘 СЛОН AI ассистент']],
-  [/помоги|помощь|help|не понимаю|объясни/i,
-    ['Конечно помогу! 🐘 Спроси про:\n• Подключение к другу (P2P)\n• Звонки и видеозвонки\n• Темы оформления\n• Группы\n• Файлы\n• Настройки профиля\n• Проблемы с микрофоном']],
-  [/спасибо|благодарю|thanks|thank you|класс|отлично|супер|круто|огонь/i,
-    ['Пожалуйста! 🐘','Рад помочь!','Всегда пожалуйста 🐘','Обращайся!','На здоровье! 🐘']],
-  [/пока|до свидания|bye|goodbye|увидимся|чао/i,
-    ['Пока! 🐘👋','До встречи!','Удачи! 🐘','Возвращайся если что 🐘']],
-  [/расскажи шутку|анекдот|пошути|смешное|joke/i,
-    ['Почему слоны не пользуются смартфонами? Потому что у них уже есть хобот для звонков! 🐘😄',
-     'Как называется мессенджер для слонов? SLON! 🐘',
-     'Что сказал слон когда увидел P2P соединение? «Хобот-хобот, связь установлена!» 🐘']],
-  [/погода|weather|дождь|солнце|температура/i,
-    ['Я не знаю погоду — я мессенджер, а не метеостанция 🐘 Но могу помочь с вопросами про SLON!']],
-  [/который час|время|сколько времени|time/i,
-    [()=>`Сейчас ${nowTime()} по твоему времени 🐘`]],
-  [/какое число|дата|date|сегодня/i,
-    [()=>`Сегодня ${new Date().toLocaleDateString('ru-RU',{weekday:'long',year:'numeric',month:'long',day:'numeric'})} 🐘`]],
-  [/сколько будет|посчитай|вычисли|\d+\s*[+\-*/]\s*\d+/,
-    ['Я не калькулятор, но могу помочь с SLON! 🐘 Для вычислений используй встроенный калькулятор телефона.']],
-  [/слон|elephant|🐘/i,
-    ['🐘 Слоны — умнейшие животные! Именно поэтому наш мессенджер называется SLON — умный, надёжный, незабываемый!',
-     'Слоны никогда ничего не забывают — как и SLON, который хранит твои чаты 🐘',
-     'Слон — символ мудрости и силы. SLON несёт эти качества в мир общения 🐘']],
-  [/секретный код|secret code|код|пасхалка|easter egg/i,
-    ['В профиле есть поле для секретного кода... 🤫 Попробуй найти правильный! 🐘']],
-  [/значок|badge|иконка|символ/i,
-    ['Есть специальный значок 🐘 для особых пользователей. Найди секретный код в профиле! 🤫']],
-  [/версия|version|обновление|update/i,
-    ['SLON Messenger — актуальная версия с P2P протоколом, 9 темами, AI ассистентом и многим другим 🐘']],
-  [/разработчик|создатель|автор|кто создал|developer/i,
-    ['SLON создан с любовью к приватному общению 🐘 P2P протокол обеспечивает максимальную конфиденциальность!']],
-  [/telegram|телеграм|whatsapp|вотсап|signal|сигнал|viber|вайбер/i,
-    ['SLON отличается от других мессенджеров тем, что использует чистый P2P — никаких серверов, никакого хранения данных! 🐘🔒']],
-  [/платный|бесплатный|стоит|цена|price|free/i,
-    ['SLON полностью бесплатный! 🐘 Никаких подписок, никакой рекламы. Просто открой в браузере и общайся.']],
-  [/где хранятся|сервер|облако|cloud|хранилище/i,
-    ['Данные хранятся только на твоём устройстве (localStorage) и передаются напрямую собеседнику через P2P. Никаких серверов! 🔒🐘']],
-  [/быстро|скорость|лагает|тормозит|медленно/i,
-    ['Скорость зависит от интернет-соединения. P2P работает быстрее при хорошем соединении. Попробуй переподключиться если лагает 🐘']],
-  [/эмодзи|emoji|смайлик|стикер/i,
-    ['В SLON можно отправлять любые эмодзи прямо в тексте сообщения! 🐘🎉❤️🔥']],
-  [/голосовое|войс|voice message|аудио сообщение/i,
-    ['Голосовые сообщения пока не поддерживаются, но есть аудио и видеозвонки! 🐘']],
-  [/статус|онлайн|офлайн|последний раз/i,
-    ['Статус отображается в шапке чата — зелёная точка означает что собеседник онлайн 🐘']],
-  [/уведомления|notification|звук|вибрация/i,
-    ['Уведомления работают через браузер. На мобильных устройствах при входящем звонке есть вибрация! 🐘']],
-  [/ошибка|error|баг|bug|не работает|сломалось/i,
-    ['Если что-то не работает:\n1. Обнови страницу (F5)\n2. Проверь интернет\n3. Попробуй другой браузер (Chrome рекомендуется)\n4. Очисти кэш браузера 🐘']],
-  [/^(хорошо|ок|окей|ok|okay|понял|понятно|ясно|ладно|угу|ага)[\s!.]*$/i,
-    ['Отлично! 🐘 Если будут вопросы — спрашивай!','Хорошо! Чем ещё могу помочь? 🐘','Понял! 🐘']],
-  [/что делать|с чего начать|как начать|первые шаги/i,
-    ['Начни с этих шагов:\n1. 👤 Открой профиль → задай имя\n2. 🔑 Скопируй свой SLON ID\n3. 📤 Отправь ID другу\n4. ➕ Добавь контакт (ID друга)\n5. 💬 Начни общение!\nЕсли нужна помощь — спрашивай 🐘']],
-];
-
-function aiReply(txt){
-  const t=txt.trim();
-  for(const[rx,arr]of AI_RULES){
-    if(rx.test(t)){
-      const item=arr[Math.floor(Math.random()*arr.length)];
-      return typeof item==='function'?item():item;
-    }
-  }
-  const defaults=[
-    'Хмм 🤔 Не совсем понял. Спроси про: звонки, темы, контакты, файлы, группы или Android 🐘',
-    'Интересный вопрос! Но я специализируюсь на помощи с SLON Messenger 🐘 Что именно тебя интересует?',
-    'Не знаю ответа на это 🤔 Попробуй спросить про функции SLON: звонки, темы, P2P подключение 🐘',
-    'Это за пределами моих знаний 🐘 Но я отлично знаю всё про SLON! Спроси что-нибудь про мессенджер.',
-    'Хороший вопрос, но я AI ассистент SLON и лучше всего помогаю с вопросами про мессенджер 🐘',
-  ];
-  return defaults[Math.floor(Math.random()*defaults.length)];
+// ── EXPORT / CLEAR ──
+function exportData(){
+  const data={username:myUsername,nick:myNick,bio:myBio,contacts:peerNames,groups:Object.keys(groups).map(k=>({id:k,...groups[k]})),theme:LS.get('sl_theme','dark'),exportedAt:new Date().toISOString()};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='slon_data.json';a.click();
+  toast('Данные экспортированы');
+}
+function confirmClearAll(){
+  showModal(`
+    <div class="m-title">⚠️ Очистить всё?</div>
+    <div class="m-info">Будут удалены все сообщения, контакты, юзернейм и настройки. Это действие необратимо!</div>
+    <div class="m-btns">
+      <button class="btn-cancel" onclick="closeModal()">Отмена</button>
+      <button class="btn-danger" onclick="doClearAll()">Удалить всё</button>
+    </div>
+  `);
+}
+function doClearAll(){
+  localStorage.clear();
+  closeModal();
+  setTimeout(()=>location.reload(),300);
 }
 
-// ── MODALS ──
-function showModal(html){$('mbox').innerHTML=html;$('modal').classList.add('show');setTimeout(()=>$('mbox').querySelector('input,textarea')?.focus(),80);}
-function closeModal(){$('modal').classList.remove('show');}
-function showMyId(){
-  if(!myId)return toast('P2P инициализируется…');
-  showModal(`<div class="m-title">🔑 Мой SLON ID</div>
-    <p class="m-info">Отправь этот ID другу — он добавит тебя через ➕ Контакт.</p>
-    <div class="m-idbox"><span class="m-id">${myId}</span><button class="btn-copy" onclick="navigator.clipboard.writeText('${myId}').then(()=>toast('Скопировано!'))">Копировать</button></div>
-    ${myNick?`<p class="m-info">Ник: <b>${esc(myNick)}</b></p>`:''}
-    <div class="m-btns"><button class="btn-ok" onclick="closeModal()">Закрыть</button></div>`);
-}
-function showAddContact(){
-  showModal(`<div class="m-title">Новый контакт</div>
-    <p class="m-info">Вставь SLON ID друга.</p>
-    <input class="m-inp" id="pidInp" placeholder="Peer ID…">
-    <input class="m-inp" id="pnickInp" placeholder="Имя (необязательно)">
-    <div class="m-btns"><button class="btn-cancel" onclick="closeModal()">Отмена</button><button class="btn-ok" onclick="doConnect()">Подключить</button></div>`);
-}
-function doConnect(){const pid=$('pidInp').value.trim(),nick=$('pnickInp').value.trim();if(!pid)return toast('Введи ID');closeModal();connectTo(pid,nick||null);}
-function showCreateGroup(){
-  const pids=Object.keys(peerNames);
-  const rows=pids.length
-    ?pids.map(pid=>`<label class="cb-row"><input type="checkbox" value="${pid}"><span>${esc((peerNames[pid]||pid).slice(0,20))}</span><span style="margin-left:auto;font-size:10px;color:var(--text2)">${conns[pid]?.open?'●':''}</span></label>`).join('')
-    :'<p class="m-info">Сначала добавь контакты!</p>';
-  showModal(`<div class="m-title">Создать группу</div>
-    <input class="m-inp" id="gnameInp" placeholder="Название группы…">
-    <div class="m-sec">Участники</div>${rows}
-    <div class="m-btns"><button class="btn-cancel" onclick="closeModal()">Отмена</button><button class="btn-ok" onclick="doCreateGroup()">Создать</button></div>`);
-}
-function doCreateGroup(){
-  const name=$('gnameInp')?.value.trim();if(!name)return toast('Введи название!');
-  const members=[...document.querySelectorAll('#mbox input[type=checkbox]:checked')].map(c=>c.value);
-  closeModal();createGroup(name,members);
-}
-function showGroupInfo(gid){
-  const g=groups[gid];if(!g)return;
-  const rows=g.members.map(pid=>`
-    <div style="display:flex;align-items:center;gap:9px;padding:8px;background:var(--bg3);border-radius:10px;margin-bottom:5px">
-      <div style="width:32px;height:32px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;overflow:hidden">
-        ${(pid===myId?myAvatar:peerAvatars[pid])?`<img src="${pid===myId?myAvatar:peerAvatars[pid]}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:'?'}
-      </div>
-      <div>
-        <div style="font-size:13px;font-weight:600">${pid===myId?'Вы'+(myNick?' ('+esc(myNick)+')':''):esc((peerNames[pid]||pid).slice(0,20))}</div>
-        <div style="font-size:10px;color:var(--text2)">${pid===g.admin?'Админ · ':''}${conns[pid]?.open||pid===myId?'В сети':'Не в сети'}</div>
-      </div>
-    </div>`).join('');
-  showModal(`<div class="m-title">👥 ${esc(g.name)}</div><div class="m-info">${g.members.length} участников</div>${rows}<div class="m-btns"><button class="btn-ok" onclick="closeModal()">Закрыть</button></div>`);
+// ── MOBILE ──
+function setupMobile(){
+  const isMob=window.innerWidth<=640;
+  const mb=$('menuBtn');if(mb)mb.style.display=isMob?'flex':'none';
+  if(isMob&&$('sidebar'))$('sidebar').classList.remove('open');
 }
 
-// ── UTILS ──
-function setNet(ok,txt){
-  const d1=$('onlineDot'),d2=$('netDot');
-  [d1,d2].forEach(d=>{if(d){d.classList.remove('online','offline','connecting');d.classList.add(ok?'online':'offline');}});
-  $('netTxt').textContent=txt||'';
-}
-function setMyLabel(){
-  $('myIdLabel').textContent=(myNick?(hasElephantBadge?'🐘 ':'')+myNick+' · ':'')+(myId?(myId.slice(0,12)+'…'):'Подключение…');
-}
-function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}}
-function resizeInp(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,100)+'px';}
-function scrollDown(){setTimeout(()=>{const c=$('msgs');if(c)c.scrollTop=c.scrollHeight;},40);}
-function checkMobile(){
-  const m=window.innerWidth<=640;
-  $('menuBtn').style.display=m?'flex':'none';
-  if(!m){$('sidebar').classList.remove('open');$('sbOverlay').classList.remove('show');}
-}
-
-window.addEventListener('resize',()=>{checkMobile();if(currentView==='chat')updateChatHeader();});
-document.addEventListener('click',e=>{
-  if(!e.target.closest('.theme-panel')&&!e.target.closest('.tb-icon-btn')&&!e.target.closest('.tb-prof-btn'))
+// ── INIT ──
+window.addEventListener('click',e=>{
+  if(!$('themePanel').contains(e.target)&&!e.target.closest('.tb-icon-btn[onclick*="toggleThemePanel"]'))
     $('themePanel').classList.remove('show');
-});
-document.addEventListener('touchstart',()=>{
-  try{
-    const A=window.AudioContext||window.webkitAudioContext;
-    if(A){const a=new A(),b=a.createBuffer(1,1,22050),s=a.createBufferSource();s.buffer=b;s.connect(a.destination);s.start(0);}
-    const ra=$('remAudio');if(ra.srcObject&&ra.paused)ra.play().catch(()=>{});
-  }catch(e){}
-},{passive:true});
+},true);
 
-// ── START ──
-loadStorage();
-checkMobile();
-buildThemeGrids();
-openChat('ai');
-rebuildSidebar();
-initPeer();
-updateProfileDisplay();
+window.addEventListener('resize',()=>{
+  setupMobile();
+  if(window.innerWidth>640){$('sidebar').classList.remove('open');$('sbOverlay').classList.remove('show');}
+});
+
+document.addEventListener('DOMContentLoaded',()=>{
+  loadStorage();
+  setupMobile();
+  buildThemeGrids();
+  updateProfileDisplay();
+  rebuildSidebar();
+
+  if(!myUsername){
+    // Первый запуск — показываем выбор юзернейма
+    showUsernameOverlay();
+  }else{
+    // Уже есть юзернейм — подключаемся
+    initPeer();
+  }
+
+  openChat('ai');
+});
 </script>
 </body>
 </html>
+
+
