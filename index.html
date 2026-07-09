@@ -1738,6 +1738,7 @@ async function doRegister(){
       errEl.style.display='block';return;
     }
 
+    const hash=await hashPassword(pass);
     myUsername=raw;myPassword=hash;
     // Новый аккаунт — генерируем уникальный internal ID для ЭТОГО аккаунта
     myInternalId='u'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
